@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="菜鸡 | allen|">
+    <meta name="keywords"  content=" Java, python">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Android内存泄漏学习笔记 - 溜大虾 | Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2017/07/27/memory-leak/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">溜大虾 Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">about</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/leak/bg.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/leak/bg.jpg')
+    }
+
+    
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, 0.3);
+    }
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                    </div>
+                    <h1>Android内存泄漏学习笔记</h1>
+                    
+                    
+                    <h2 class="subheading">学习总结</h2>
+                    
+                    <span class="meta">Posted by 溜大虾 on July 27, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h1 id="内存泄漏">内存泄漏</h1>
+
+<p>最近在项目中偶尔会发现内存泄漏现象。一开始还是一脸懵逼的查来查去，一直没有个清晰地思路。这几天闲下来，打算认真整理学习一下。我在这里从一个“如何主动造成内存泄漏”的角度来学习，然后熟悉一下不同方法检测的结果如何，这样以后再遇到相关问题时就能够很快的解决了。</p>
+
+<h2 id="java-gc">java gc</h2>
+
+<p>首先要有一个大前提，也就是java gc。在大部分虚拟机（包括Android的ART）中，Java都采用了“可达性分析”算法来进行内存回收，原理是：会有几个引用作为root节点，对于任意对象来说，如果从root层层遍历，如果找不到对于他的引用链，那么这个对象就被标记为无用，就会在gc时被销毁。</p>
+
+<h2 id="何为泄漏">何为泄漏</h2>
+
+<p>内存泄漏，即部分对象虽然已经不再使用，但是因为有root持有引用，所以并没有被销毁，所占用的内存一直没有被释放。一次两次发生影响不大。如果频繁发生，那么可用内存会渐渐不足，最终在某一次请求内存时发现内存不足而发生oom。这里要明确一个概念，只有强引用会发生内存泄漏，而weak等引用因为其特殊机制，所以影响不大。</p>
+
+<h2 id="什么会泄露">什么会泄露</h2>
+
+<p>泄露影响比较大的就是一些大对象，常见的比如某些资源，bitmap，以及activity。</p>
+
+<h2 id="如何发生泄露">如何发生泄露</h2>
+
+<p>首先让我们从另一个角度来看，如何主动发生内存泄漏呢？当然是想办法给他一个一直存在的强引用了。</p>
+
+<h3 id="static">static</h3>
+
+<p>static这个关键字使一个变量变为只和这个类相关的类变量，和实例无关。他的生命周期是很长的，贯穿于app的启动到关闭。因此只要用一个static引用一个大对象，就可以泄漏了！举个例子：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="n">Activity</span> <span class="n">activity</span><span class="o">;</span>
+</code></pre></div></div>
+
+<p>这是最简单粗暴的持有一个activity的引用，这样这个activity退出之后对象并没有被销毁。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="n">View</span> <span class="n">view</span><span class="o">;</span>
+</code></pre></div></div>
+
+<p>一个View初始化时会用到context，我们在自定义View，重写构造方法时就知道这个了。因此如果一个View也像这样被持有，那个context也不会被释放。</p>
+
+<h3 id="innerclass">innerClass</h3>
+
+<p>内部类有个特性，是他会持有一个外部类的引用。如果内部类的实例一直存活，那么外部类activity的实例也就一直在。比如持有一个static的内部类引用：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">static</span> <span class="n">LeakInnerClass</span> <span class="n">context</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">LeakInnerClass</span> <span class="o">{</span>
+    <span class="n">Context</span> <span class="n">context</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>或者以前我们用asynctask时喜欢搞一个匿名内部类执行异步任务，那当我们activity退出后这个异步任务还在执行的话，就会泄露了。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">leakAsyncTask</span><span class="o">(){</span>
+    <span class="k">new</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Void</span><span class="o">,</span><span class="n">Void</span><span class="o">,</span><span class="n">Void</span><span class="o">&gt;(){</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">protected</span> <span class="n">Void</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Void</span><span class="o">...</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+              <span class="c1">//哇啦啦啦啦啦啦我就是耗时操作</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>还有自己开个匿名线程：</p>
+
+<pre><code class="language-Java">void leakThread(){
+    new Thread(){
+        @Override
+        public void run() {
+            while (true){
+                //哇啦啦啦啦啦啦我是耗时操作
+            }
+        }
+    }.start();
+}
+</code></pre>
+
+<p>还有在使用handler时，如果用了匿名handler，那么这个handler会带着activity的引用藏到消息队列中。消息没有被处理，就会造成内存泄漏。类似的，还有timertask等。</p>
+
+<h3 id="register">register</h3>
+
+<p>我们平时会用到很多第三方库，比如ButterKnife EventBus RxJava等等，有的时候要获取系统服务，getSystemService。在使用的时候，都有一个先registerd或者bind的操作，而且在创建的时候会把activity的引用传过去。如果在activity结束时没有unregister或者unbind，就会造成内存泄漏。</p>
+
+<h2 id="如何检测泄漏">如何检测泄漏</h2>
+
+<p>最简单的方法自然就是使用leakcanary了。只要给自己的项目加上这个工具，在发生泄漏的时候很快就会有提示。具体使用方法看<a href="https://www.liaohuqiu.net/cn/posts/leak-canary-read-me/">这里</a>。</p>
+
+<p>除此之外，android studio的刀耕火种的方式也不错，在这里我拿一个例子来示范一下我是怎么用的。</p>
+
+<h3 id="一次leak检测过程">一次leak检测过程</h3>
+
+<h4 id="准备工作">准备工作</h4>
+
+<p>首先，我写了两个activity，一个MainActivity，一个MemoryLeakActivity，逻辑是：MainActivity中有个按钮，点击会调到MemoryLeakActivity，在这个activity中会故意发生内存泄漏，代码如下：</p>
+
+<p><img src="/img/leak/code.jpg" alt="" /></p>
+
+<p>在开始之前，再熟悉一下这个</p>
+
+<p><img src="/img/leak/moniter.jpg" alt="" /></p>
+
+<p>（原谅我拙劣的画笔）</p>
+
+<p>这个Monitors可以观察当前选中app的运行状态，现在只需要关注我标了123的地方。</p>
+
+<p>首先这个Memory就是当前app的内存使用状况：</p>
+
+<p>1.产生一个当前java堆的.hprof文件，这个文件反映了当前时刻java堆中内存详情，记住这个玩意有大用！</p>
+
+<p>2.手动进行一次gc</p>
+
+<p>3.这一块很重要，首先他有两个部分，蓝色和灰色。蓝色部分是当前内存使用大小，灰色部分是这个app被限制的最大内存大小。当蓝色部分越来越大，最后和灰色部分一样时，说明我们内存使用很多了即将内存不足，此时会进行一次gc同时将回灰色部分即限制的大小提高。</p>
+
+<h4 id="肉眼观察">肉眼观察</h4>
+
+<p>好了，介绍完这个工具，我们开始动手实践。首先打开app，点击按钮跳到会发生泄漏的activity上，再按返回键，然后再次按下按钮……这样反复操作：</p>
+
+<p><img src="/img/leak/activity1.jpg" alt="" /></p>
+
+<p><img src="/img/leak/activity2.jpg" alt="" /></p>
+
+<p>与此同时，观察monitors的memory窗口，会发现蓝色部分在每一次开启新activity时会增长一部分，这很正常。但是在返回时，明明activity被“退出”了，但是蓝色部分还是没有变化。反复几次之后，蓝色部分一直在增长。也就是说当前内存越用越多，可以推断已经发生内存泄漏啦~</p>
+
+<h4 id="自动分析">自动分析</h4>
+
+<p>接下来由android studio来分析一下。在反复几次上面的操作之后，返回MainActivity，然后点击dump java heap按钮，然后等一会儿，android studio在为我们dump此时的horof文件。在成功后，会自动打开：</p>
+
+<p><img src="/img/leak/analyzer.jpg" alt="" /></p>
+
+<p>如图在这个界面中，我们看最右面有一个栏叫 Analyzer Tasks，打开它，会发现有两个选项。我们是来看activity的内存泄漏的，那就把那个查重复字符串的√去掉。然后点右边那个绿色小三角，会发现下面Analysis Results栏里面展示出了当前泄露的Activity引用：</p>
+
+<p><img src="/img/leak/results.jpg" alt="" /></p>
+
+<p>点击第一个item，最下方Reference Tree栏中便展示出了具体的引用：</p>
+
+<p><img src="/img/leak/inner.jpg" alt="" /></p>
+
+<p>一般来说，第一个就是我们发生泄漏的地方。在图中，this$0的意思是隐式的引用。也就是说，我们的activity是因为一个内部类而发生了内存泄漏。</p>
+
+<p>再点击刚才results中第二个item，看一下下方的reference tree:</p>
+
+<p><img src="/img/leak/ref.jpg" alt="" /></p>
+
+<p>可以看到显式的有一个leakCntextRef引用，这说明我们有一个名为leakCntextRef的引用持有了activity。回过头看看我们的代码，果然，验证的没错。</p>
+
+<h4 id="拓展">拓展</h4>
+
+<p>android studio的分析还算比较简单而且内容较少，我们可以把这个hprof导出，然后用mat来分析，具体看<a href="https://mingjunli.gitbooks.io/mat/content/">这里</a>。</p>
+
+<h2 id="怎么解决泄漏">怎么解决泄漏</h2>
+
+<p>既然发生了泄漏，那就要解决它，避免问题出现。那么怎么解决呢？很简单，泄漏是因为持有了activity引用导致无法被销毁，那么只有两个选择：及时取消引用，或者让这个引用多待一会，但是该gc的时候就销毁。</p>
+
+<p>根据这个思路：</p>
+
+<ul>
+  <li>我们在代码中能不用static变量持有contxt就不用，非要用就用weak引用。</li>
+  <li>对于内部类，尽量用静态内部类，这样就不会持有外部类引用。如果需要外部类引用做一些事，就手动赋给一个weak引用。</li>
+  <li>对于匿名内部类，不要图简单方便，实在不行就乖乖的写成外部类。</li>
+  <li>异步操作，尽量用可以方便管理的，比如rxJava，而不是用老古董AsyncTask了。非要用也最好加一个终止条件，在退出Activity时就该结束了。</li>
+  <li>在用rx时，可以在subscribe()的时候获取到Subscripeion，在不用的时候手动unSubscribe()，或者直接bind()到Activity的生命周期上，比如使用RxActivity管理。</li>
+  <li>在使用handler时，记得在activity的onDestroy()中加上remove()</li>
+  <li>在获取到某些资源时，使用完记得释放</li>
+  <li>在用到一些大对象比如Bitmap啊什么的，要记得回收</li>
+  <li>最后，在使用各种第三方库或者系统服务的时候还要记得有注册或绑定就要有解除注册、解绑定。</li>
+</ul>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/07/25/review-os/" data-toggle="tooltip" data-placement="top" title="操作系统">
+                        Previous<br>
+                        <span>操作系统</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/08/10/java-jvm-all/" data-toggle="tooltip" data-placement="top" title="《深入理解JVM》读书总结">
+                        Next<br>
+                        <span>《深入理解JVM》读书总结</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href=""></a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "Liuerr0r";
+    var disqus_identifier = "/2017/07/27/memory-leak";
+    var disqus_url = "http://localhost:4000/2017/07/27/memory-leak/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xu-hua-85-3">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Liuerr0r">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 溜大虾 Blog 2018
+                    <br>
+                    <!--Theme by <a href="http://huangxuan.me">Hux</a> |-->
+                    <!--<iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>-->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+<!-- Image to hack wechat -->
+<!--<img src="/img/icon_wechat.png" width="0" height="0" />-->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

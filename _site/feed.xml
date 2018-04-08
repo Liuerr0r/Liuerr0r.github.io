@@ -1,0 +1,1404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>溜大虾 Blog</title>
+    <description>菜鸡 | allen|</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sun, 08 Apr 2018 08:33:45 +0800</pubDate>
+    <lastBuildDate>Sun, 08 Apr 2018 08:33:45 +0800</lastBuildDate>
+    <generator>Jekyll v3.7.3</generator>
+    
+      <item>
+        <title>Tomecat</title>
+        <description>&lt;h2 id=&quot;tomcat的安装及环境配置&quot;&gt;tomcat的安装及环境配置&lt;/h2&gt;
+&lt;hr /&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;下载
+&lt;a href=&quot;https://tomcat.apache.org/&quot;&gt;tomcat下载地址&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;环境变量的配置&lt;/p&gt;
+
+    &lt;p&gt;1.新建系统变量名CATALINA_BASE，值为tomcat的安装路径。&lt;/p&gt;
+
+    &lt;p&gt;2.新建系统变量名CATALINA_HOME，值为tomcat的安装路径。&lt;/p&gt;
+
+    &lt;p&gt;3.找到系统变量path，在值里面添加“%CATALINA_HOME%\lib;%CATALINA_HOME%\bin”。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;启动&lt;/p&gt;
+
+    &lt;p&gt;打开cmd输入startup&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;tomcat的目录结构&quot;&gt;tomcat的目录结构&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;目录&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;解释&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;bin&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;存放二进制可执行文件&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;conf&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;存放配置信息&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;lib&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;存放依赖jar文件&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;logs&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;存放日志文件&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;temp&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;存放临时文件&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;webapps&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;存放要发布的项目文件&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;work&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;运行时生成的文件，真正的执行文件&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;LICENSE&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;许可证&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;NOTICE&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;说明文件&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;conf文件下的重要文件&quot;&gt;conf文件下的重要文件&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;server.xml 配置服务器信息：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;配置端口号 
+&amp;lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;connectionTimeout=&quot;20000&quot;redirectPort=&quot;8443&quot; /&amp;gt;
+
+配置GET方法字符串编码 
+&amp;lt;Connector URIEncoding=&quot;UTF-8&quot; port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;connectionTimeout=&quot;20000&quot;redirectPort=&quot;8443&quot; /&amp;gt;
+
+配置主机名及项目路径 
+Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot; unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&amp;gt; 
+&amp;lt;Context path=&quot;/world&quot; docbase = &quot;D:\hello&quot; reloadable=&quot;ture&quot; &amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;tomcat-users.xml 存储tomcat用户的文件，这里保存的是tomcat的用户名及密码，以及用户的角色信息。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;web.xml 部署描述符文件，可以修改默认访问界面。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;welcome-file-list&amp;gt;  
+        &amp;lt;welcome-file&amp;gt;index.html&amp;lt;/welcome-file&amp;gt; 
+        &amp;lt;welcome-file&amp;gt;index.htm&amp;lt;/welcome-file&amp;gt; 
+        &amp;lt;welcome-file&amp;gt;index.jsp&amp;lt;/welcome-file&amp;gt; 
+&amp;lt;/welcome-file-list&amp;gt;  
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;context.xml 对所有应用的统一配置，通常我们不会去配置它。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 06 Apr 2018 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/04/06/tomcat/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/04/06/tomcat/</guid>
+        
+        <category>Tomcat</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>JavaSE-简单数据类型及运算</title>
+        <description>&lt;h3 id=&quot;简单数据类型及运算&quot;&gt;简单数据类型及运算&lt;/h3&gt;
+
+&lt;h4 id=&quot;变量&quot;&gt;变量&lt;/h4&gt;
+
+&lt;h5 id=&quot;定义变量&quot;&gt;定义变量&lt;/h5&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;格式：type variableName = initValue;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;type:表示定义变量的数据类型。
+variableName：表示变量的名称
+initValue：表示对变量赋予的初始值。&lt;/p&gt;
+
+&lt;h5 id=&quot;变量的分类&quot;&gt;变量的分类&lt;/h5&gt;
+
+&lt;p&gt;类变量，局部变量，方法参数变量，异常处理参数变量。&lt;/p&gt;
+
+&lt;p&gt;1 类变量
+类变量也称成员变量，声明在类中，不属于任何一个方法，作用域是整个类，类变量可以不进行初始化而直接使用。&lt;/p&gt;
+
+&lt;p&gt;2 局部变量
+局部变量是指在方法或者方法代码块中定义的变量，其作用域是所在的代码块。&lt;/p&gt;
+
+&lt;p&gt;3方法参数变量
+作为方法参数声明的变量作用域是整个方法。&lt;/p&gt;
+
+&lt;p&gt;4异常处理参数变量
+异常处理参数变量的作用域是在异常处理块中，该变量是将异常处理参数传递给异常处理块。&lt;/p&gt;
+
+&lt;h4 id=&quot;常量&quot;&gt;常量&lt;/h4&gt;
+
+&lt;p&gt;1.定义常量&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;格式：final type constantName = initValue&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;标识符&quot;&gt;标识符&lt;/h4&gt;
+&lt;p&gt;标识符在程序中一般用来定义常量、变量及类名称等的名称。它的命名规范如下所示：&lt;br /&gt;
+1.首字符必须是字母下划线，￥或$。&lt;br /&gt;
+2.标识符由数字由数字0-9，大写字母a-z、下划线_、￥、$、以及所有在十六进制0xc0前的ASCLL码组成。&lt;br /&gt;
+3.不能把关键字保留字作为标识符。&lt;br /&gt;
+4.标识符的长度没有限制。&lt;br /&gt;
+5.标识符区分大小写。&lt;br /&gt;
+6.类名：首字母大写其后每一个单词的首字母大写。&lt;br /&gt;
+7.方法名,属性名，变量名和对象名：首字母小写，其后每一个单词的首字母大写。&lt;br /&gt;
+8.关键字,包名：全部小写。&lt;br /&gt;
+9.常量：全部大写。&lt;/p&gt;
+
+&lt;h4 id=&quot;关键字&quot;&gt;关键字&lt;/h4&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;数据类型&lt;/td&gt;
+      &lt;td&gt;byte、boolean、char、double、int、long、float、short&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;用于类和接口说明&lt;/td&gt;
+      &lt;td&gt;class、extends、implements和interface&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;引入包和包说明&lt;/td&gt;
+      &lt;td&gt;import、package&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Boolean值和空值&lt;/td&gt;
+      &lt;td&gt;false、true、null&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;用于流程控制&lt;/td&gt;
+      &lt;td&gt;switch、case、continue、break、default、do、while、for、if、else和return&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;用于异常处理&lt;/td&gt;
+      &lt;td&gt;try、catch、finaly、throw、throws&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;修饰符&lt;/td&gt;
+      &lt;td&gt;abstract、final、native、private、protected、public、static、synchronilzed、transient、volatitle&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;操作符&lt;/td&gt;
+      &lt;td&gt;instanceof&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;创建对象&lt;/td&gt;
+      &lt;td&gt;new&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;引用&lt;/td&gt;
+      &lt;td&gt;this、supper&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;方法返回类型&lt;/td&gt;
+      &lt;td&gt;void&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;保留字&lt;/td&gt;
+      &lt;td&gt;goto、const&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;基本数据类型&quot;&gt;基本数据类型&lt;/h4&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;类型名称&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;关键字&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;占用内存&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;取值范围&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;初始值&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;字节型&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;byte&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1个字节&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-128~127&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;短整型&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;short&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;2个字节&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-32768~32767&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;整形&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;int&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;4个字节&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-2^31~2^31-1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;长整型&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;long&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;8个字节&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-2^63~2^63-1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;单精度浮点型&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;float&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;4个字节&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-3.4E+38F~3.4E+38F&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0.0f&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;双精度浮点型&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;double&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;8个字节&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-1.8E+308~1.8E+308&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0.0d&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;字符集&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;char&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;2个字节&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;ISO单一字符集&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;null&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;布尔型&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;boolean&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1个字符&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;true、false&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;false&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+</description>
+        <pubDate>Mon, 25 Sep 2017 21:20:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/25/JavaSE-02/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/25/JavaSE-02/</guid>
+        
+        <category>JavaSE</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>JavaSE-概述</title>
+        <description>&lt;h2 id=&quot;java语言概述&quot;&gt;Java语言概述&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;一次编写，到处运行。
+由sun公司开发，现属于Oracle公司。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;java版本&quot;&gt;Java版本&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;JavaSE(J2SE)：标准版&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;JavaEE(J2EE)：企业版&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;JavaME(J2ME)：微缩版&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;java程序执行流程&quot;&gt;Java程序执行流程&lt;/h3&gt;
+
+&lt;p&gt;源程序（.java文件）-&amp;gt;javac.exe编译 -&amp;gt;字节码文件（.class文件）-&amp;gt; 解释 -&amp;gt;解释器（JVM）-&amp;gt;运行。&lt;/p&gt;
+
+&lt;h3 id=&quot;java虚拟机jvn&quot;&gt;Java虚拟机（JVN）&lt;/h3&gt;
+
+&lt;p&gt;保证Java语言平台无关性，执行字节码文件（.class文件）。&lt;/p&gt;
+
+&lt;p&gt;Java字节码程序在JVN中运行要经历三个步骤：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;类加载器（class loader）将类文件加载到JVM中。这个阶段需要校验类文件是否符合规范。&lt;/li&gt;
+  &lt;li&gt;字节码检验器（bytecode verifier）检验该类文件代码是否符合文件规范。&lt;/li&gt;
+  &lt;li&gt;如果字节码检验器通过检验则由Java解释器进行执行。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;java程序的运行环境&quot;&gt;Java程序的运行环境&lt;/h3&gt;
+
+&lt;h4 id=&quot;jdk&quot;&gt;Jdk&lt;/h4&gt;
+
+&lt;p&gt;JDK是java语言开发工具包；&lt;/p&gt;
+
+&lt;p&gt;JDK目录结构：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;bin——DK包含的一些开发工具执行文件；&lt;/li&gt;
+  &lt;li&gt;lib——Java开发工具要用的一些库文件，有包含了支持JDK工具的非核心类库tool.jar；&lt;/li&gt;
+  &lt;li&gt;jre——JDK使用的Java运行环境（JRE）的根目录&lt;/li&gt;
+  &lt;li&gt;src.zip——归档的Java源代码&lt;/li&gt;
+  &lt;li&gt;include——java和JVM交互用的头文件&lt;/li&gt;
+  &lt;li&gt;db——纯Java开发的数据可 Derby，是一个开源的100%Java开发的关系数据库&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;JDK工具：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;avac.exe – Java语言编译器&lt;/li&gt;
+  &lt;li&gt;java.exe – Java应用程序启动器，JDK 1.6版里同时用于开发和部署，旧的部署启动器&lt;/li&gt;
+  &lt;li&gt;javadoc.exe – Java API 文档生成器&lt;/li&gt;
+  &lt;li&gt;apt.exe – java 注释处理器&lt;/li&gt;
+  &lt;li&gt;appletviewer.exe – java applet 小程序查看器&lt;/li&gt;
+  &lt;li&gt;jar.exe – java文件压缩打包工具&lt;/li&gt;
+  &lt;li&gt;jdb.exe – Java 调试器&lt;/li&gt;
+  &lt;li&gt;javah.exe – C 头文件和stub生成器，用于写本地化方法，例如生产JNI样式的头文件&lt;/li&gt;
+  &lt;li&gt;javap.exe – class文件 反编译工具&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;jre&quot;&gt;JRE&lt;/h4&gt;
+
+&lt;p&gt;JRE：java运行环境&lt;/p&gt;
+
+&lt;h4 id=&quot;jvm&quot;&gt;JVM&lt;/h4&gt;
+
+&lt;p&gt;JVM:java虚拟机&lt;/p&gt;
+
+&lt;h4 id=&quot;包含关系&quot;&gt;包含关系&lt;/h4&gt;
+
+&lt;p&gt;包含关系：JDK包含JRE包含JVM&lt;/p&gt;
+
+&lt;h3 id=&quot;path和classpath的区别&quot;&gt;path和classpath的区别&lt;/h3&gt;
+
+&lt;p&gt;path：可执行文件的文件路径&lt;/p&gt;
+
+&lt;p&gt;classpath：class文件的文件路径&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 22 Sep 2017 21:20:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/22/JavaSE-01/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/22/JavaSE-01/</guid>
+        
+        <category>JavaSE</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>JavaSE-目录</title>
+        <description>&lt;h3 id=&quot;目录&quot;&gt;目录&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Java语言概述&lt;/li&gt;
+  &lt;li&gt;简单的数据类型极其运算&lt;/li&gt;
+  &lt;li&gt;流程控制语句&lt;/li&gt;
+  &lt;li&gt;类和对象&lt;/li&gt;
+  &lt;li&gt;深入面向对象编程&lt;/li&gt;
+  &lt;li&gt;数组与集合&lt;/li&gt;
+  &lt;li&gt;异常&lt;/li&gt;
+  &lt;li&gt;线程&lt;/li&gt;
+  &lt;li&gt;Java常用类&lt;/li&gt;
+  &lt;li&gt;Java的输入输出流&lt;/li&gt;
+  &lt;li&gt;图形界面应用&lt;/li&gt;
+  &lt;li&gt;Java数据库编程&lt;/li&gt;
+  &lt;li&gt;Java网络编程&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Tue, 19 Sep 2017 22:20:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/19/JavaSE-00/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/19/JavaSE-00/</guid>
+        
+        <category>JavaSE</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>http要点（2）</title>
+        <description>&lt;h3 id=&quot;http首部字段&quot;&gt;Http首部字段&lt;/h3&gt;
+
+&lt;p&gt;Http首部字段是构成报文的要素之一。使用首部字段是为了给浏览器和服务器提供报文主体大小、所使用的语言，认证信息等内容。&lt;/p&gt;
+
+&lt;h3 id=&quot;http首部字段结构&quot;&gt;Http首部字段结构&lt;/h3&gt;
+
+&lt;p&gt;首部字段名：字段值&lt;/p&gt;
+
+&lt;h3 id=&quot;常见http首部字段&quot;&gt;常见Http首部字段&lt;/h3&gt;
+
+&lt;h4 id=&quot;通用首部字段&quot;&gt;通用首部字段：&lt;/h4&gt;
+
+&lt;p&gt;1.Cache-Control：控制缓存行为。常用指令如下：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;缓存请求指令&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;参数&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;说明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;no-cache&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;强制向服务器再次验证&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;no-store&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;不缓存请求或响应的任何内容&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;max-age = 秒&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;必须&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;响应的最大age值&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;max-stale = 秒&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;可省略&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;接收已将过期的响应&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;min-fresh = 秒&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;必须&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;期望在指定时间内的响应仍然有效&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;no-transform&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;代理不可更改媒体类型&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;noly-if-cached&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;从缓存获取资源&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;cache-extension&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;新指令标记（token）&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;缓存响应指令&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;参数&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;说明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;public&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;可像任意方提供响应的缓存&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;private&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;可省略&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;仅向特定用户返回响应&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;no-cache&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;可省略&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;缓存前必须先确认其有效性&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;no-store&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;不缓存请求或响应的任何内容&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;no-transform&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;代理不可更改媒体类型&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;must-revalidate&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;可缓存但必须再向源服务器进行确认&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;proxy-revalidate&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;无&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;要求中间缓存服务器对缓存响应的有效性再进行确认&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;max-age = 秒&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;必须&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;响应的最大age值&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;s-maxage = 秒&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;必须&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;公共缓存服务器响应的最大age值&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;cache-extension&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;新指令标记（token）&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;2.Connection：控制不再转发给代理的首部字段和管理持久连接。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;控制不再转发给代理的首部字段格式：       &lt;strong&gt;Connection：不再转发的首部字段&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;管理持久连接格式：&lt;strong&gt;Connetion：close&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3.Date：表明创建HTTP报文的日期和时间。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;HTTP/1.1协议使用在RFC1123中规定的日期时间格式。例如：&lt;strong&gt;Date： Tue，03 Jul 2012 04：40：59 GMT&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;HTTP/1.1之前的版本使用RFC850中定义的格式。例如：&lt;strong&gt;Date： Tue，03 - Jul - 2012 04：40：59 GMT&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;4.Transfer-Encoding：规定传输报文主题时的编码方式。HTTP/1.1的传输编码方式仅对分块传输编码有效。&lt;/p&gt;
+
+&lt;h4 id=&quot;请求首部字段&quot;&gt;请求首部字段&lt;/h4&gt;
+
+&lt;p&gt;1.Accept
+该首部字段会通知服务器客户端能够处理的媒体类型和媒体类型的优先级，可以采用type/subtype这样的形式。&lt;br /&gt;
+&lt;strong&gt;例如&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;文本文件：text/html，text/plain。text/css等等。&lt;/li&gt;
+  &lt;li&gt;图片文件：image/jpeg，image/gif，image/png等等。&lt;/li&gt;
+  &lt;li&gt;视频文件：video/mpeg等等&lt;/li&gt;
+  &lt;li&gt;应用程序使用的二级文件： applictiaon/octet,application/zip等
+若想要给显示媒体加优先级，可以使用q=来额外表示权值，用分号进行分割。权重值的范围为0~1,1为最大值。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;2.Accept-Charset
+该首部字段可用来通知服务器用户代理支持的字符集及字符集的相对优先顺序，同样用q来表示优先级。&lt;/p&gt;
+
+&lt;p&gt;3.Accept-Encoding
+该首部字段迎来告知服务器用户代理支持的编码内容及优先级顺序，可一次性指定多种内容编码。&lt;/p&gt;
+
+&lt;p&gt;4.Accept-Language
+该首部字段用来告知服务器用户代理支持的语言字符集及优先顺序，同样使用q来表示优先级。&lt;/p&gt;
+
+&lt;p&gt;5.Authorization
+该首部字段用来告知服务器用户代理的认证信息。&lt;/p&gt;
+
+&lt;p&gt;6.Expect
+该首部字段用来告知服务器，客户端期待服务器做出某种特定的行为。如果服务器无法理解客户端的期望而做出响应会返回417 Expectation Failed.&lt;/p&gt;
+
+&lt;p&gt;7.Host
+该首部字段告知服务器请求资源的主机名和端口号。&lt;/p&gt;
+
+&lt;p&gt;8.If-xx
+该样式类型的字段可称为请求条件，只有当服务器判断请求条件为真时才会执行请求。&lt;/p&gt;
+
+&lt;p&gt;9.Range
+对资源进行范围请求&lt;/p&gt;
+
+&lt;p&gt;10.Referer
+该首部字段告知服务器请求的原始资源URI。&lt;/p&gt;
+
+&lt;p&gt;11.User-Agent
+该首部字段会将创建请求的浏览器和用户代理名称传给服务器。&lt;/p&gt;
+
+&lt;h4 id=&quot;响应首部字段&quot;&gt;响应首部字段&lt;/h4&gt;
+
+&lt;p&gt;1.Accept-Ranges
+该首部字段用于告知客户端服务武器是否能处理范围请求。字段值有两种，可以处理时为bytes，反之为none。&lt;/p&gt;
+
+&lt;p&gt;2.Age
+该首部字段告知客户端，源服务器在多久前创建了响应，字段值单位为毫秒。&lt;/p&gt;
+
+&lt;p&gt;3.ETag&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;该首部字段能告知客户端实体标识。它是一种可将资源以字符串形式做唯一性标识的方式。服务器会为每份资源分配对应的ETag值。&lt;/li&gt;
+  &lt;li&gt;当资源更新时，ETag的值也会更新。生成新的ETag值。&lt;/li&gt;
+  &lt;li&gt;仅凭URI指定缓存的资源是相当困难的。若下载过程中出现连接中断，再连接的情况，都会依照ETag来指定资源。&lt;/li&gt;
+  &lt;li&gt;ETag有强弱之分，强ETag值无论实体发生多么细微的变化都会改变其值。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;4.Location
+该首部字段可以将响应请求接收方式引导至某个与请求URI位置不同的资源。该字段基本上会配合3xx使用。&lt;/p&gt;
+
+&lt;p&gt;5.Sever
+该首部字段用来告知客户端当前服务器安装的HTTP服务器应用程序的信息。&lt;/p&gt;
+
+&lt;h4 id=&quot;实体首部字段&quot;&gt;实体首部字段&lt;/h4&gt;
+&lt;p&gt;实体首部字段用来告知实体内容的相关信息。&lt;/p&gt;
+
+&lt;p&gt;1.Allow
+该首部字段用来告知客户端服务器所支持的Request-URI指定资源的所有HTTP方法。如果服务器收到不支持的HTTP方法，则会返回405状态码。与此同时还会把支持的HTTP方法返回。&lt;/p&gt;
+
+&lt;p&gt;2.Content-Encoding
+首部字段会告知实体主体内容的编码方式。内容编码是指在不丢失尸体信息的前提下所进行的压缩。主要的四种内容编码方式：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;gzip&lt;/li&gt;
+  &lt;li&gt;compress&lt;/li&gt;
+  &lt;li&gt;deflate&lt;/li&gt;
+  &lt;li&gt;identity&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3.Content-Language
+该首部字段告知客户端实体主体使用的语言。&lt;/p&gt;
+
+&lt;p&gt;4.Content-Length
+该首部字段表明实体主体的大小。&lt;/p&gt;
+
+&lt;p&gt;5.Content-Location
+该字段给出报文主体返回资源对应的URI。&lt;/p&gt;
+
+&lt;p&gt;6.Content-MD5
+客户端会对接收的报文主体进行相同的MD5算法，然后与首部字段Content-MD5的字段值进行比较。用来验证主体内容是否被更改。&lt;/p&gt;
+
+&lt;p&gt;7.Content-Range
+针对范围请求，返回响应时使用Content-Range。能告知客户端作为响应返回的实体的哪个部分符合范围请求。&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 12 Sep 2017 20:20:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/12/http/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/12/http/</guid>
+        
+        <category>http</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>http要点（1）</title>
+        <description>&lt;h3 id=&quot;关于http&quot;&gt;关于HTTP&lt;/h3&gt;
+&lt;p&gt;HTTP（超文本传输协议）：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;属于应用层协议。&lt;/li&gt;
+  &lt;li&gt;基于c/s模式。&lt;/li&gt;
+  &lt;li&gt;通过请求响应达成通行。&lt;/li&gt;
+  &lt;li&gt;无连接，不保持状态，一次连接请求响应结束既断开。&lt;/li&gt;
+  &lt;li&gt;职责是生成针对目标web服务器的http请求报文。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;关于url&quot;&gt;关于URL&lt;/h3&gt;
+
+&lt;p&gt;URL（统一资源定位符）是URI（统一资源标识符）的子集。&lt;br /&gt;
+URI格式：&lt;br /&gt;
+协议方案名://user:password@host[:port]/带层次的文件路径?查询字符串#片段标识符&lt;/p&gt;
+
+&lt;h3 id=&quot;关于http报文&quot;&gt;关于Http报文&lt;/h3&gt;
+&lt;p&gt;用于http协议交互的信息称作HTTP报文。&lt;br /&gt;
+从请求端发送到响应端（服务器端）的叫做请求报文。&lt;br /&gt;
+从响应端发送到请求端的叫响应报文。&lt;br /&gt;
+HTTP报文本身是由多行数据构成的字符串文本。
+HTTP报文可大致分为报文首部和报文主体两部分。两者由空行隔开。通常不一定要有报文主体。&lt;br /&gt;
+&lt;img src=&quot;https://raw.githubusercontent.com/Liuerr0r/Liuerr0r.github.io/master/img/datas/http_01.png&quot; alt=&quot;报文结构&quot; /&gt;&lt;br /&gt;
+报文首部：服务器端或客户端处理的请求或响应的内容及属性。&lt;br /&gt;
+报文主体：应被发送的数据。&lt;/p&gt;
+&lt;h4 id=&quot;请求报文的结构&quot;&gt;请求报文的结构&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;请求行：用于请求的方法，请求URI和Http的版本。格式：请求方法 请求URI Http版本号&lt;/li&gt;
+  &lt;li&gt;请求首部字段&lt;/li&gt;
+  &lt;li&gt;通用首部字段&lt;/li&gt;
+  &lt;li&gt;实体首部字段&lt;/li&gt;
+  &lt;li&gt;其他&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;请求方法：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GET:获取资源。该方法用于请求访问已被URI识别的资源。指定的资源被服务器解析后返回响应的内容。&lt;/li&gt;
+  &lt;li&gt;POST：在请求URI所标识的资源后附加新的数据。常用于提交表单。&lt;/li&gt;
+  &lt;li&gt;HEAD：请求获取由请求URI所标识的资源的响应消息报头。&lt;/li&gt;
+  &lt;li&gt;PUT：向服务器存储资源，并保存到请求URI指定的位置。&lt;/li&gt;
+  &lt;li&gt;DELETE：删除请求URI指定的资源。&lt;/li&gt;
+  &lt;li&gt;TRACE：请求服务器回送收到的请求信息，主要用于测试和诊断（不常用）。&lt;/li&gt;
+  &lt;li&gt;CONNECT：该方法要求在代理服务器通信时建立隧道，实现用隧道协议进行TCP通信。主要使用SLL和TLS协议把通信信息加密后传输。&lt;/li&gt;
+  &lt;li&gt;OPTIONS：查询请求URI指定资源支持的方法。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;响应报文的结构&quot;&gt;响应报文的结构&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;状态行：包含响应结果的状态码，原因短语和HTTP版本。&lt;/li&gt;
+  &lt;li&gt;响应首部字段&lt;/li&gt;
+  &lt;li&gt;通用首部字段&lt;/li&gt;
+  &lt;li&gt;实体首部字段&lt;/li&gt;
+  &lt;li&gt;其他&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;状态码：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;类别&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;原因短语&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1xx&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;信息性状态码&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;接收的请求正在处理&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2xx&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;成功状态码&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;请求正常处理完毕&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3xx&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;重定向状态码&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;需要进行附加操作以完成请求&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4xx&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;客户端错误状态码&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;服务器无法处理请求&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5xx&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;服务器错误状态码&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;服务器处理请求出错&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;常见状态码：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;200 ok：服务器正常处理请求。&lt;/li&gt;
+  &lt;li&gt;204 no content：服务器正常处理请求没有资源返回。&lt;/li&gt;
+  &lt;li&gt;206 partial content：表示客户端进行了范围请求，服务器成功执行了这部分的get请求。&lt;/li&gt;
+  &lt;li&gt;301 Moved permanently：表示资源已经永久性重定向到了新的URI。&lt;/li&gt;
+  &lt;li&gt;302 Found ：临时新重定向，表示请求的资源已经被分配到了其他URI，希望用户本次能使用心得URI访问（302存在网址劫持的问题。比如我要做一个新的网址
+但是我不想写内容，于是我用302做一个重定向，当别人访问我的网址的时候会跳转到别人的网址。但是由于搜索引擎算法的原因和我的网址比别人的网址更加简洁友好
+导致搜索引擎不会去抓取别人的网址，而是继续显示我的网址，但网址的内容却是别人网址的。从而把别人的劳动成果窃取。）&lt;/li&gt;
+  &lt;li&gt;303 See other：该状态码明确要求客户端应该采用get方法获取资源。&lt;/li&gt;
+  &lt;li&gt;307 Temporary Redirect:对于POST请求，表示请求还没有被处理，客户端应该向Location里的URI重新发起POST请求。&lt;/li&gt;
+  &lt;li&gt;304 Not Modified：该状态码表示客户端发送附带请求时，服务器端允许请求访问资源。但因为发生请求为满足条件的情况后，直接返回304 状态码。&lt;/li&gt;
+  &lt;li&gt;400 Bad Request：该状态码表示请求包含语法错误。&lt;/li&gt;
+  &lt;li&gt;401 Unauthorized：请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用。&lt;/li&gt;
+  &lt;li&gt;403 Forbidden：服务器收到请求，但是拒绝提供服务。&lt;/li&gt;
+  &lt;li&gt;404 Not Found：请求资源不存在，eg：输入了错误的URL。&lt;/li&gt;
+  &lt;li&gt;500 Internal Server Error：服务器发生不可预期的错误。&lt;/li&gt;
+  &lt;li&gt;503 Server Unavailable：服务器当前不能处理客户端的请求，一段时间后可能恢复正常。&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Mon, 11 Sep 2017 20:20:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/11/http/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/11/http/</guid>
+        
+        <category>http</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Java虚拟机的基本结构</title>
+        <description>&lt;h3 id=&quot;0需要了解得知识点&quot;&gt;0、需要了解得知识点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Jvm的基本构成&lt;/li&gt;
+  &lt;li&gt;认识Java堆&lt;/li&gt;
+  &lt;li&gt;认识Java栈&lt;/li&gt;
+  &lt;li&gt;认识方法区&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;1jvm的基本构成&quot;&gt;1、Jvm的基本构成&lt;/h3&gt;
+&lt;p&gt;Java的基本结构如下图所示：
+&lt;img src=&quot;https://raw.githubusercontent.com/Liuerr0r/Liuerr0r.github.io/master/img/datas/Java基本结构.png&quot; alt=&quot;java基本结构图&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;类加载子系统:从本地或者从网络加载class文件&lt;/li&gt;
+  &lt;li&gt;方法区：存放被加载类的信息，常量池信息。&lt;/li&gt;
+  &lt;li&gt;Java堆: 在虚拟机启动时建立，堆内存线程共享。&lt;/li&gt;
+  &lt;li&gt;直接内存： Java的NIO库允许Java程序直接使用直接内存。直接内存是不包含在Java堆内直接向系统申请的内存。（出于性能考虑，读写频繁的场合考虑使用直接内存）&lt;/li&gt;
+  &lt;li&gt;Java栈： 线程独有，线程创建时创建。&lt;/li&gt;
+  &lt;li&gt;本地方法栈：本地方法栈和Java栈类似，不过区别在于Java方法由Java程序调用，本地方法栈由本地方法调用（通常是C语言编写）&lt;/li&gt;
+  &lt;li&gt;垃圾回收器是jvm的重要组成部分，垃圾回收器可以对方法区，Java堆，和直接内存进行回收。&lt;/li&gt;
+  &lt;li&gt;PC寄存器：线程私有，Java虚拟机会对每个线程创建pc寄存器。&lt;/li&gt;
+  &lt;li&gt;执行引擎：执行引擎是Java虚拟机最核心组件之一，它负责执行虚拟机的字节码。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;11-java堆&quot;&gt;1.1 Java堆&lt;/h4&gt;
+&lt;p&gt;常见Java堆结构将整个Java堆分为新生代和老年代。其中，新生代存放新生对象或者年龄不大的对象，老年代则存放老年对象。&lt;/p&gt;
+
+&lt;p&gt;新生代可能分成&lt;em&gt;eden&lt;/em&gt;,&lt;em&gt;s0&lt;/em&gt;,&lt;em&gt;s1&lt;/em&gt;（&lt;em&gt;s1&lt;/em&gt;和&lt;em&gt;s0&lt;/em&gt;也被称为from和头区）。每经过一次新生代回收如果对象存活，那么就会进入s1或者s0，之后每一次存活年龄加1，直到年龄达到一定数值后就会进入老年区。&lt;/p&gt;
+
+&lt;p&gt;Java堆中存放的是类的实例对象。&lt;/p&gt;
+
+&lt;p&gt;堆的内存指定参数-xmx，-xms。&lt;/p&gt;
+
+&lt;h4 id=&quot;12-java栈&quot;&gt;1.2 Java栈&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Java栈是每个线程所独有的，在每个线程建立的时候建立，每个线程消亡的时候消亡。线程执行的基本行为就是调用函数，每次函数调用数据都是通过Java栈传递。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Java栈的结构包含以下几个部分：
+    &lt;ul&gt;
+      &lt;li&gt;局部变量表&lt;/li&gt;
+      &lt;li&gt;操作数栈&lt;/li&gt;
+      &lt;li&gt;帧数据区&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;每一次函数调用都有一个相应的栈帧被压入Java栈中，如果在函数中调用其他函数，则会形成嵌套。栈内存有限。多层函数嵌套将可能导致内存溢出。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;指定栈内存参数 -Xss&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;121-局部变量表&quot;&gt;1.2.1 局部变量表&lt;/h5&gt;
+&lt;ul&gt;
+  &lt;li&gt;局部变量表用于保存函数的参数及局部变量，局部变量表中的变量只在当前函数调用中有效果。一旦函数结束调用，那么随着函数栈帧的销毁，局部变量表也会销毁。&lt;/li&gt;
+  &lt;li&gt;在相同栈容量下，局部变量少的函数可以支持更深的函数调用。
+long，double型局部变量占用两个字节。
+int，short，byte，对象引用占用一个字节。&lt;/li&gt;
+  &lt;li&gt;栈帧中局部变量表的槽位可以复用，如果一个局部变量过了它的作用域。那么在他作用域之后声明的局部变量就很有可能会复用过期的局部变量的槽位。从而节省资源。&lt;/li&gt;
+  &lt;li&gt;如下代码可以看到局部变量槽位的复用：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	//未发生复用
+	public void test1(){
+		int a = 0;
+		int b = 0;
+	}
+	//发生复用
+	public void test2(){
+		{
+			int a = 0;
+		}
+		int b = 0;
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;局部变量表的垃圾回收：&lt;/p&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;      //被a引用不能被回收
+      public void test1(){
+          byte[] a = new byte[6*1024*1024];
+          System.gc();
+      }
+      //可以回收
+      public void test2(){
+          byte[] a = new byte[6*1024*1024];
+          a = null;
+          System.gc();
+      }
+      //局部变量a 失效，但a还是存在局部变量表中，且数组仍然被a引用，所以不能被回收。		
+      public void test3(){
+          {
+              byte[] a = new byte[6*1024*1024];
+          }
+          System.gc();
+			
+      }
+      //局部变量a失效且局部变量b复用了槽位。a被销毁，则数组可以被回收。
+      public void test4(){
+          {
+              byte[] a = new byte[6*1024*1024];
+          }
+          int b = 0;
+          System.gc();
+      }
+      //函数test1被调用返回后，栈帧被销毁。数组可以被回收。
+      public void test5(){
+      test1();
+      System.gc()
+      }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;122-操作数栈&quot;&gt;1.2.2 操作数栈&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;操作数帧用于保存计算的中间结果，同时作为计算过程中变量的临时存储空间。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;123-帧数据区&quot;&gt;1.2.3 帧数据区&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;帧数据区中保存着访问常量池的指针，方便程序访问常量池
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;13-方法区&quot;&gt;1.3 方法区&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;线程共享用于存储系统的类信息，如字段，方法，常量池等。  
+
+Jdk1.8之前方法区可以理解为永久区，内存大小指定参数为-XX:Permisize，-XX:Maxpermisize.  
+
+Jdk1.8开始永久区被彻底移除换成了元数据区，使用的是直接内存，内存大小指定参数为-XX:MaxMetaspaceSize.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Wed, 06 Sep 2017 20:20:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/06/java-jvm-2/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/06/java-jvm-2/</guid>
+        
+        <category>jvm</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>初识java虚拟机</title>
+        <description>&lt;h3 id=&quot;0需要了解的知识点&quot;&gt;0、需要了解的知识点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;什么是虚拟机？&lt;/li&gt;
+  &lt;li&gt;什么是Java虚拟机？&lt;/li&gt;
+  &lt;li&gt;了解Java虚拟机的发展历史。&lt;/li&gt;
+  &lt;li&gt;为什么需要Java虚拟机&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;1什么是虚拟机&quot;&gt;1、什么是虚拟机&lt;/h3&gt;
+
+&lt;p&gt;虚拟机本质上来说就是一个软件。这个软件是对物理机的仿真，使它具有真实计算机的功能。
+虚拟机隔离于真实操作系统，你在虚拟机内部进行的各种操作都不会影响到真实的计算机。
+虚拟机的性能取决于真实计算机对它的资源的分配。
+常用的虚拟机有：VMware、Visual Box&lt;/p&gt;
+
+&lt;h3 id=&quot;2什么是java虚拟机&quot;&gt;2、什么是Java虚拟机&lt;/h3&gt;
+
+&lt;p&gt;Java虚拟机（英语：Java Virtual Machine，缩写为JVM），一种能够运行Java bytecode的虚拟机，以堆栈结构机器来进行实做。
+最早由太阳微系统所研发并实现第一个实现版本，是Java平台的一部分，能够运行以Java语言写作的软件程序。
+Java虚拟机有自己完善的硬体架构，如处理器、堆栈、寄存器等，还具有相应的指令系统。
+JVM屏蔽了与具体操作系统平台相关的信息，使得Java程序只需生成在Java虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行。
+通过对中央处理器（CPU）所执行的软件实现，实现能执行编译过的Java程序码（Applet与应用程序）。
+（以上摘录自维基百科）&lt;/p&gt;
+
+&lt;h3 id=&quot;3java虚拟机的发展史&quot;&gt;3、Java虚拟机的发展史&lt;/h3&gt;
+
+&lt;p&gt;最初由sun公司开发的一款叫做Classic的Java虚拟机.
+现在广泛使用的是Hotspot。&lt;/p&gt;
+
+&lt;h3 id=&quot;4为什么需要java虚拟机&quot;&gt;4、为什么需要Java虚拟机&lt;/h3&gt;
+&lt;p&gt;众所周知Java语言具有平台无关性，Java程序的源代码可以一次编译到处运行。而实现这一特性的关键就是Java虚拟机。如下图：
+&lt;img src=&quot;https://raw.githubusercontent.com/Liuerr0r/Liuerr0r.github.io/master/img/datas/Java跨平台原理.png&quot; alt=&quot;java跨平台原理图&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 05 Sep 2017 20:20:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/09/05/java-jvm-1/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/05/java-jvm-1/</guid>
+        
+        <category>jvm</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>《深入理解JVM》读书总结</title>
+        <description>&lt;h1 id=&quot;前言&quot;&gt;前言&lt;/h1&gt;
+
+&lt;p&gt;首先，java程序可以“一次编写，到处运行”就是因为有Java虚拟机这个东西作为容器。Java虚拟机作为一个中间层，向上接受由我们编写的代码生成的字节码，向下给机器提供可以被直接执行的目标代码，这就有了Java的“平台无关性”的基础。通过这个定义我们知道，一切可以编译出字节码的语言都可以获得这种“平台无关性”，也就是说像一些类Java语言比如Groovy Scala等，因为用他们也可以生成字节码，所以也可以用Java虚拟机来执行，也就具有了平台无关性。所以Java虚拟机并不只是为Java这一种语言服务的，他在一开始被创造出来的时候就被明确要具有这种拓展性。Android虚拟机其实也就是Java虚拟机的一种衍生，通过学习Java虚拟机对Android开发也是有帮助的。Java虚拟机对Java的支持可以从以下几个方面来讲：内存管理机制，类加载机制和优化。&lt;/p&gt;
+
+&lt;h1 id=&quot;内存管理&quot;&gt;内存管理&lt;/h1&gt;
+
+&lt;p&gt;先说内存管理。内存管理，就是Java虚拟机在运行时管理如何为程序划分内存区域，如何分配内存，内存用完如何回收。&lt;/p&gt;
+
+&lt;h3 id=&quot;内存区域&quot;&gt;内存区域&lt;/h3&gt;
+
+&lt;p&gt;先讲一下内存区域的划分。Java虚拟机把内存分为很多数据区域，不同的区域用途和生存周期不同。我们常常直接接触到的是运行时数据区，可以细分为：方法区、堆、虚拟机栈、本地方法栈、程序计数器。这几个区域中，方法区和堆是所有线程共享的，所有线程都可以访问，而虚拟机栈、本地方法栈、程序计数器是线程隔离的，每个线程有自己独立的区域，线程之间是不共享的。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;程序计数器：相当于一个程序执行过程中的行号指示器，类似于操作系统中的ip，指向当前执行的虚拟机字节码地址。如果执行的是Java方法，计数器就记录者正在执行的虚拟机字节码指令的地址。如果是native 方法，计数器为空&lt;/li&gt;
+  &lt;li&gt;虚拟机栈：虚拟机栈就是java方法的内存模型，每一个线程在执行时会有自己的一个虚拟机栈，在运行过程中把所调用方法封装为一个栈帧，然后将栈帧存放在栈里面。栈帧包含了一个方法执行时的相关信息，包括方法用到的局部变量，操作数，动态链接等。&lt;/li&gt;
+  &lt;li&gt;本地方法栈：类似于虚拟机栈，只不过他存放的是Native方法。&lt;/li&gt;
+  &lt;li&gt;堆：堆是相对来说占内存最大的一块，用来存放所有线程创建的类的对象实例。方法调用中如果创建了对象，会把这个对象实例存放在堆，然后将对于这个对象的引用存放在栈中，这样就可以方法对象了。对于内存的回收，也就是对堆内存的回收了。&lt;/li&gt;
+  &lt;li&gt;方法区：存放虚拟机加载的类的信息和一些常量、静态变量等，这些内容一般是不可变的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;oom和stackoverflow&quot;&gt;OOM和StackOverFlow&lt;/h3&gt;
+
+&lt;p&gt;OOM和StackOverFlow就是在运行时数据区出现的。前面说了，虚拟机栈会把每次调用的方法作封装为一个栈帧存起来。这些栈帧肯定是要占内存的，而栈的内存也是有限的。如果栈帧很多一直没有释放，这时候又来了一个栈帧，这个栈帧已经没有空间可以容纳了，有两种情况。如果这种虚拟机栈不支持动态扩展，那么将会抛出StackOverFlow异常。如果支持动态扩展，那么这个栈会请求再扩展部分空间。当然内存不是无穷的，如果频繁的扩展内存，以至于无法再继续扩展了，这时候会抛出OutOfMemory异常。&lt;/p&gt;
+
+&lt;p&gt;除此之外，堆得空间也是有限的。由于创建的对象都是要在堆中分配内存，那么如果堆中空间不足，没有足够的内存空间用来给新的对象分配内存，这时候也会抛出OutOfMemory异常。&lt;/p&gt;
+
+&lt;h3 id=&quot;内存分配与回收&quot;&gt;内存分配与回收&lt;/h3&gt;
+
+&lt;p&gt;创建一个对象，就在堆中给这个内存分配一块内存。当对象不再被使用，所占的内存就被回收，用来给其他对象。要回收内存，就要知道哪些对象会被回收，什么时候会被回收，回收的具体算法是怎么一个操作。&lt;/p&gt;
+
+&lt;h4 id=&quot;对象的创建分代&quot;&gt;对象的创建——分代&lt;/h4&gt;
+
+&lt;p&gt;一个对象的创建过程很简单，比如我new一个对象，虚拟机发现这条指令后，会先看看new 后面跟着的那个参数能否在常量池中定位到一个类的符号引用，并且检查那个类是否已经被加载过。如果没有，则进行一次类的加载工作（具体细节后面会讲）。加载完成后，虚拟机会为新的对象在堆中分配一块内存，具体分配多少，在类加载完之后其实就已经定了。分配完内存，之后会将这个对象的实例字段初始化为零值。最后，会对对象进行一些设置，比如设置哈希码，分代年龄信息，这个对象属于哪个类之类的。&lt;/p&gt;
+
+&lt;p&gt;这一系列工作做完，这个对象才算是被创建成功了，之后才会去调用相关代码，按照我们的意愿真正做一次初始化。&lt;/p&gt;
+
+&lt;p&gt;创建好一个对象，还需要一个引用来持有他，这样我们才能使用。引用是放在虚拟机栈 栈帧的本地变量表中的。引用有两种形式，一种是直接持有对象地址，一种是持有一个句柄，句柄保存在堆中，包含着对象的地址，是间接访问。直接访问速度快，间接访问在对象频繁移动时比较有优势。&lt;/p&gt;
+
+&lt;h4 id=&quot;哪些对象会被回收可达性分析算法&quot;&gt;哪些对象会被回收？——可达性分析算法&lt;/h4&gt;
+
+&lt;p&gt;选择回收哪些对象，虚拟机有很多算法，常见的有引用计数法和可达性分析算法。引用计数法的思路就是为每一个对象设一个值，用来计算被引用的次数。只要有一个对于对象的引用存在，就让这个数字加一。这样如果一个对象没有任何引用，那么引用计数为零，这个对象就会被标记为“可回收”。但是这样有一个很严重的bug，那就是如果我有两个对象，已经不再使用，但是他们互相引用，那么他们的引用计数就永远不会为零，那么就不会被回收。&lt;/p&gt;
+
+&lt;p&gt;现在大部分虚拟机都采用了“可达性分析算法”，这一算法显然要比引用计数法不知道高到哪里去了。他的思想是，将一些特定的对象作为GC Roots，然后从这个节点向下寻找对其他对象的引用。如果一个对象到GC Roots没有引用链，那么就可以被回收了。在Java虚拟机中，被规定作为GC Roots的对象有：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;虚拟机栈中引用的对象&lt;/li&gt;
+  &lt;li&gt;方法区中 静态属性引用的对象&lt;/li&gt;
+  &lt;li&gt;方法区中 常量引用的对象&lt;/li&gt;
+  &lt;li&gt;JNI引用的对象&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所以我们日常开发过程中遇到的内存泄漏，很大一部分原因就是本该被回收的对象无意之中被GC Roots引用到了，比如写的static这样的静态字段引用的对象，这样他就不会被回收了&lt;/p&gt;
+
+&lt;h4 id=&quot;回收的算法多种混合&quot;&gt;回收的算法？——多种混合&lt;/h4&gt;
+
+&lt;p&gt;知道哪些对象要被回收，接下来就是具体如何回收的问题了。垃圾回收算法有很多，常见的有标记-清楚法，标记-整理法，复制算法，分代收集等。现在的虚拟机基本上都是采用以分代收集为基础，搭配其他算法一起合作完成的。这些算法就不一一介绍了，有兴趣大家可以查一查。&lt;/p&gt;
+
+&lt;p&gt;具体：根据对象的生存周期对内存划分为新生代 老生代，在新生代中因为每次都会有大量对象被回收，比较频繁，因此采用了复制算法。而老生代相对来说回收的对象少，没那么频繁，而且对象普遍比较大，因此采用了标记-清楚或标记-整理算法。&lt;/p&gt;
+
+&lt;h4 id=&quot;回收的过程双重标记&quot;&gt;回收的过程？——双重标记&lt;/h4&gt;
+
+&lt;p&gt;具体的回收过程是，当在GC时发现一个对象可被回收，就会先对他做一次标记，这是第一次标记。之后会筛选一下，如果一个对象的finalized()方法是否有必要被执行。如果有，那么就会被放置到一个队列中，之后虚拟机会单独的处理这一队列中的对象，依次调用他们的finalized()方法，这里是对象复活的唯一机会。之后又会统一进行一次标记，如果这次标记标记成功，那么对象就会被认定为死亡，会立刻被回收。&lt;/p&gt;
+
+&lt;h4 id=&quot;gc的时机动态年龄判定&quot;&gt;GC的时机？——动态年龄判定&lt;/h4&gt;
+
+&lt;p&gt;虚拟机针对对内存回收，又把堆分为了两个区，新生代和老年代。新生代又分为一个Eden区和两个Survivor区。每次分配内存，如果对象比较大的话直接进入老年代。否则，先进入Eden区和一个Survivor区，同时会为每一个对象设一个年龄值。之后会周期性的在某个安全点检查一下，对于新生代的对象，将可回收的对象回收掉，将剩余的对象复制到另一个Survivor区，这一过程中会对年龄值加一。这一过程叫做Minor GC，是属于新生代的GC。当某些对象年龄值比较大时，会将他们移动到老年代去。当然在这之前会先查看一下老年代剩余空间是否满足移动。如果不能满足，就会对老年代进行一次GC，这一过程叫做Full GC。而这个检查对象是否可GC得时机，也就是GC的时机，一般是确定的被称作“安全点”。在这一时机进行检查，是不会影响程序正常运行的。&lt;/p&gt;
+
+&lt;h4 id=&quot;灵活的控制四大引用&quot;&gt;灵活的控制——四大引用&lt;/h4&gt;
+
+&lt;p&gt;GC的流程大致就是这样。我们知道Java中引用有四种，分别是强、软、弱、虚。这四种引用的区别就在于GC的过程中：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;强引用：直接通过类名new一个对象，这样直接创建的对对象的引用叫做强引用。被强引用的对象，一般是不会被回收掉的。&lt;/li&gt;
+  &lt;li&gt;软引用：被软引用持有的对象，只有在“不回收就要内存溢出”的时候，才会回收&lt;/li&gt;
+  &lt;li&gt;弱引用：被弱引用持有的对象，在每次GC都会被回收&lt;/li&gt;
+  &lt;li&gt;虚引用：无任何时机作用，只是一个标记，为了能使对象被回收时做一些系统通知什么的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;类加载机制&quot;&gt;类加载机制&lt;/h1&gt;
+
+&lt;p&gt;Java实现平台无关性的基石，就是字节码。在Java虚拟机中，有一个class文件这个概念。一般情况下，每一个类都会产生一个class文件，其内容就是字节码。虚拟机执行字节码，其实就是加载了类的class文件。Android中有两种虚拟机，Dalvik虚拟机和ART虚拟机。他们属于Java虚拟机的衍生，区别在于两个：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Java虚拟机是基于栈架构的，DVM和ART是基于寄存器架构的&lt;/li&gt;
+  &lt;li&gt;Java虚拟机执行的是字节码，而DVM ART都不一样。DVM会将class文件重新封装为dex文件，执行dex字节码。ART会在DVM的基础上进一步转化为本地机器码再执行。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;类加载，就是说加载每一个class，而和class相对应的也就是class文件了，所以有必要大致了解一下class文件结构。&lt;/p&gt;
+
+&lt;h3 id=&quot;class文件结构&quot;&gt;Class文件结构&lt;/h3&gt;
+
+&lt;p&gt;任何一个class文件都对应着唯一一个类或者接口的定义信息。但是类或者接口又不必一定非要在class文件中（比如动态的通过类加载器加载）。class文件是一组二进制流，其中包含额类的虽有相关信息，非常紧凑的排列在一起，很严格的规定了第几位到第几位是什么，主要包含了魔数，常量池等数据信息。&lt;/p&gt;
+
+&lt;p&gt;这不部分内容看起来还是很无聊的，主要关注其中一部门就好啦。比如一开头的4个字节是魔数，魔数的唯一作用是确定这个文件是否可以被虚拟机接受。&lt;/p&gt;
+
+&lt;p&gt;还比如，其中有一段被称为常量池入口，这个很重要了。常量池是class文件结构与其他项目关联最多的数据类型，相当于一个资源池。通过这个常量池入口，可以获得常量池信息。常量池具体而言，存放着两种类型：字面量和符号引用。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;字面量：就是字面量，比如文本字符串这样的。&lt;/li&gt;
+  &lt;li&gt;符号引用：包括三种常亮：类和接口的全限定名、字段的名称和描述符、方法的名称和描述符。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;他们的作用就是在虚拟机运行时，通过常量池入口，在常量池中找到对应的符号引用，从而找到引用的类或者方法等。&lt;/p&gt;
+
+&lt;h3 id=&quot;类加载机制-1&quot;&gt;类加载机制&lt;/h3&gt;
+
+&lt;p&gt;类的生命周期氛围7个阶段：&lt;/p&gt;
+
+&lt;p&gt;加载  验证  准备  解析  初始化  使用  卸载&lt;/p&gt;
+
+&lt;p&gt;其中，验证  准备  解析 三个步骤又可以合并为  链接&lt;/p&gt;
+
+&lt;p&gt;所以类加载的过程就是 加载 链接 初始化了&lt;/p&gt;
+
+&lt;h4 id=&quot;加载的时机按需加载&quot;&gt;加载的时机——按需加载&lt;/h4&gt;
+
+&lt;p&gt;虚拟机并没有规定类的加载过程什么时候开始，只是明确了类加载的生命周期是固定的。但是比较特别的是“初始化”。我们需要用到一个类的时候，就一定要“初始化”，而其他在他之前的步骤，自然也就必须要调用了。因此可以这样概括为：加载、验证、准备、解析，这个过程是不确定的，由不同虚拟机自己控制，可能不知道哪个时候就进行了。但是当我们需要用到一个类时，就必须要立刻从加载开始执行到初始化结束，之后才能使用。&lt;/p&gt;
+
+&lt;p&gt;那么什么时候需要这个类呢，以下几种常见情况：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;new一个对象，或者调用一个类的静态字段或者静态方法&lt;/li&gt;
+  &lt;li&gt;反射调用一个类&lt;/li&gt;
+  &lt;li&gt;子类加载前要先加载父类&lt;/li&gt;
+  &lt;li&gt;虚拟机刚启动时执行主类&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这些情况，都是属于对类的主动引用。&lt;/p&gt;
+
+&lt;h4 id=&quot;加载的过程五步走&quot;&gt;加载的过程——五步走&lt;/h4&gt;
+
+&lt;p&gt;前面说过了，类的加载过程是类的生命周期前五个步骤：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;加载：&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;通过一个类的全限定名来获取定义此类的二进制字节流&lt;/li&gt;
+      &lt;li&gt;将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构&lt;/li&gt;
+      &lt;li&gt;在内存中生成一个代表这个类的class对象，作为方法区这个类的各种数据访问入口&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;因为加载这个过程没有限制具体的来源，所以衍生出了很多新东西，比如Jar包的读取，从网络中加载类等。&lt;/p&gt;
+
+    &lt;p&gt;这是对于简单类而言的。对于数组，不会通过类加载器加载，而是由虚拟机直接创建，之后才会递归的加载数组中的引用类。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;验证：验证是链接过程的第一步，目的是确保Class文件的字节流中包含的信息符合当前虚拟机的要求，且不会危害虚拟机本身的安全。验证主要有四类：&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;文件格式验证：字节流是否符合Class文件格式规范&lt;/li&gt;
+      &lt;li&gt;元数据验证：语义分析，符合语言规范&lt;/li&gt;
+      &lt;li&gt;字节码验证：分析数据流，确定语义是合法的，符合逻辑的。&lt;/li&gt;
+      &lt;li&gt;符号引用验证：验证符号引用合法性&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;准备：正式为类量分配内存并设置初值。类变量要分配在方法去中，设置初值的是类变量而不是实例变量。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;解析：将常量池内的符号引用替换为直接引用。前面说过，符号引用只是以简单的通过名称等信息指出引用的方法或类，。那么在这里才会真正的将符号引用转换为直接引用，即对于方法区类的引用。直接引用类似于指针，所以这一过程可以理解为从名称到地址的转化。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;初始化：前面是加载和链接的过程，这里就是类加载过程的最后一步了。所谓的初始化阶段，就是真正执行在类中写的代码了。比如实例变量的初始化和构造器等。初始化阶段也可以理解为调用类的构造器的过程。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;加载的工具类加载器&quot;&gt;加载的工具——类加载器&lt;/h4&gt;
+
+&lt;p&gt;前面说过，第一步“加载”过程，要通过一个类的全限定名来获取这个类的二进制字节流。这个过程，是要借助于一股虚拟机外部的工具来进行的，这一工具就是类加载器。每一个类，都有一个针对他的类加载器。两个类是否相同，不但要比较他本身，还要比较他们的类加载器。&lt;/p&gt;
+
+&lt;p&gt;类加载器可以分为三类：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;启动类加载器：由C++编写，属于虚拟机的一部分，是属于很基础的加载器，回加载Java目录下lib中的类。&lt;/li&gt;
+  &lt;li&gt;扩展类加载器：可以由开发者使用&lt;/li&gt;
+  &lt;li&gt;应用类加载器：也叫做系统类加载器，加载用户类路径上自己指定的类，我们平时使用也基本是使用这个。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;而具体的加载逻辑，被称为“双亲委派模型”，即首先有一个根部的加载器“启动类加载器”，其下有一个儿子叫“扩展类加载器”，其下是“应用程序类加载器”，最后是“自定义类加载器”。具体流程：&lt;/p&gt;
+
+&lt;p&gt;一个类收到了加载的请求，首先会把请求委托给父类加载，每一个加载器都是如此。这样最终会把请求交给根节点的“启动类加载器”。之后如果父加载器可以加载，就会直接加载。否则，会将请求再传下来。&lt;/p&gt;
+
+&lt;h1 id=&quot;虚拟机优化&quot;&gt;虚拟机优化&lt;/h1&gt;
+
+&lt;p&gt;Java的编译期，是一个极不确定的过程。因为Java的编译期很多，有前端编译期，有后端编译器，还有静态提前编译器。前端编译期负责将.java转化为简单的.class，后端编译器负责将字节码转换为机器码，如JIT。静态提前编译器会将.java直接翻译为本地机器码，如AOT。因此，编译期并不能很精准的分类，因此只能大概分为“早期”和“晚期”。&lt;/p&gt;
+
+&lt;h3 id=&quot;早期优化&quot;&gt;早期优化&lt;/h3&gt;
+
+&lt;p&gt;早期阶段，可以概括的看做前端编译器将.java转化为.class的过程。这一阶段的优化又可以称作编译期优化。&lt;/p&gt;
+
+&lt;p&gt;这一阶段其实和其他语言的编译期优化类似，无非就是词法、语法分析，语义分析，然后做一些语言层面的优化。比如，语法糖、注解的处理，还有字符串拼接。Java语法糖不多，但是挺实用的，诸如类型擦除啊，自动拆箱、装箱啊。注解是在编译时进行优化，具体在运行时才会体现出作用。还有一个例子，我们都知道String StringBuilder StringBuffer区别。都说每次用”+”链接两个字符串的时候都会new一个String，这样会很耗内存。其实这个说法并不全对。如果仅仅是一个个拼接，哪怕是换行，编译器如果识别到，都会为我们优化，即将他们作为一个String对象。只有个别情况，比如在循环结构中频繁的链接字符串，才会出现刚才说的那个问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;运行期优化&quot;&gt;运行期优化&lt;/h3&gt;
+
+&lt;p&gt;运行期优化，比较熟知的比如JIT和AOT。虚拟机之所以这样分开，是为了增加虚拟机扩展性，也就是说普通的前端编译期只接受Java。而后端编译器则可以接受像Groovy等语言。同时JIT和AOT对编译的性能优化很大，因此也就被选作Android中Java虚拟机所使用的编译器了。&lt;/p&gt;
+
+&lt;p&gt;先说JIT，他是将字节码转换为了机器码，这是DVM采用的编译器。他的特点可以打个比方，比如让你背一首诗，而且还要当着我的面背出来，还要重复背好几次，那么你肯定需要背好久，才能一次念出来。通过JIT，我可以让你照着书，看一个字背一句。这样背起来就很轻松了。但是JIT也不一定真的就远比普通的解释器执行慢。在JVM中，JIT是针对热点代码的，对于这些代码才会进行JIT编译。因此JIT就编译本身转化过程而言也是比较慢的，快是快在执行上。还是那个例子，如果只让你大概总结一下意思，就背几句诗，那么你翻书还不如直接背的快。而对于热点诗句，你能看一眼念一句，那么这个速度是相当快的。&lt;/p&gt;
+
+&lt;p&gt;再说AOT。AOT是直接将.java转换为本地机器码。拿上面那个例子来说，我给你的这篇古诗，其实你以前就背过一部分，所以现在再背一小部分就可以了，所以速度快，但是代价是，需要提前准备，因此占据脑容量大。&lt;/p&gt;
+
+&lt;p&gt;在Android中，以前的DVM采用了JIT，而现在的ART采用了AOT。具体区别在于DVM编译时，安装过程比较快，占空间小，但是执行比较慢。而AOT则是安装过程慢，占空间大，但是执行快。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 10 Aug 2017 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/08/10/java-jvm-all/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/08/10/java-jvm-all/</guid>
+        
+        <category>Java</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Android内存泄漏学习笔记</title>
+        <description>&lt;h1 id=&quot;内存泄漏&quot;&gt;内存泄漏&lt;/h1&gt;
+
+&lt;p&gt;最近在项目中偶尔会发现内存泄漏现象。一开始还是一脸懵逼的查来查去，一直没有个清晰地思路。这几天闲下来，打算认真整理学习一下。我在这里从一个“如何主动造成内存泄漏”的角度来学习，然后熟悉一下不同方法检测的结果如何，这样以后再遇到相关问题时就能够很快的解决了。&lt;/p&gt;
+
+&lt;h2 id=&quot;java-gc&quot;&gt;java gc&lt;/h2&gt;
+
+&lt;p&gt;首先要有一个大前提，也就是java gc。在大部分虚拟机（包括Android的ART）中，Java都采用了“可达性分析”算法来进行内存回收，原理是：会有几个引用作为root节点，对于任意对象来说，如果从root层层遍历，如果找不到对于他的引用链，那么这个对象就被标记为无用，就会在gc时被销毁。&lt;/p&gt;
+
+&lt;h2 id=&quot;何为泄漏&quot;&gt;何为泄漏&lt;/h2&gt;
+
+&lt;p&gt;内存泄漏，即部分对象虽然已经不再使用，但是因为有root持有引用，所以并没有被销毁，所占用的内存一直没有被释放。一次两次发生影响不大。如果频繁发生，那么可用内存会渐渐不足，最终在某一次请求内存时发现内存不足而发生oom。这里要明确一个概念，只有强引用会发生内存泄漏，而weak等引用因为其特殊机制，所以影响不大。&lt;/p&gt;
+
+&lt;h2 id=&quot;什么会泄露&quot;&gt;什么会泄露&lt;/h2&gt;
+
+&lt;p&gt;泄露影响比较大的就是一些大对象，常见的比如某些资源，bitmap，以及activity。&lt;/p&gt;
+
+&lt;h2 id=&quot;如何发生泄露&quot;&gt;如何发生泄露&lt;/h2&gt;
+
+&lt;p&gt;首先让我们从另一个角度来看，如何主动发生内存泄漏呢？当然是想办法给他一个一直存在的强引用了。&lt;/p&gt;
+
+&lt;h3 id=&quot;static&quot;&gt;static&lt;/h3&gt;
+
+&lt;p&gt;static这个关键字使一个变量变为只和这个类相关的类变量，和实例无关。他的生命周期是很长的，贯穿于app的启动到关闭。因此只要用一个static引用一个大对象，就可以泄漏了！举个例子：&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Activity&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这是最简单粗暴的持有一个activity的引用，这样这个activity退出之后对象并没有被销毁。&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;View&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;一个View初始化时会用到context，我们在自定义View，重写构造方法时就知道这个了。因此如果一个View也像这样被持有，那个context也不会被释放。&lt;/p&gt;
+
+&lt;h3 id=&quot;innerclass&quot;&gt;innerClass&lt;/h3&gt;
+
+&lt;p&gt;内部类有个特性，是他会持有一个外部类的引用。如果内部类的实例一直存活，那么外部类activity的实例也就一直在。比如持有一个static的内部类引用：&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;LeakInnerClass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;LeakInnerClass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;或者以前我们用asynctask时喜欢搞一个匿名内部类执行异步任务，那当我们activity退出后这个异步任务还在执行的话，就会泄露了。&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;leakAsyncTask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AsyncTask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;(){&lt;/span&gt;
+
+        &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;doInBackground&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+              &lt;span class=&quot;c1&quot;&gt;//哇啦啦啦啦啦啦我就是耗时操作&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;还有自己开个匿名线程：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-Java&quot;&gt;void leakThread(){
+    new Thread(){
+        @Override
+        public void run() {
+            while (true){
+                //哇啦啦啦啦啦啦我是耗时操作
+            }
+        }
+    }.start();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;还有在使用handler时，如果用了匿名handler，那么这个handler会带着activity的引用藏到消息队列中。消息没有被处理，就会造成内存泄漏。类似的，还有timertask等。&lt;/p&gt;
+
+&lt;h3 id=&quot;register&quot;&gt;register&lt;/h3&gt;
+
+&lt;p&gt;我们平时会用到很多第三方库，比如ButterKnife EventBus RxJava等等，有的时候要获取系统服务，getSystemService。在使用的时候，都有一个先registerd或者bind的操作，而且在创建的时候会把activity的引用传过去。如果在activity结束时没有unregister或者unbind，就会造成内存泄漏。&lt;/p&gt;
+
+&lt;h2 id=&quot;如何检测泄漏&quot;&gt;如何检测泄漏&lt;/h2&gt;
+
+&lt;p&gt;最简单的方法自然就是使用leakcanary了。只要给自己的项目加上这个工具，在发生泄漏的时候很快就会有提示。具体使用方法看&lt;a href=&quot;https://www.liaohuqiu.net/cn/posts/leak-canary-read-me/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;除此之外，android studio的刀耕火种的方式也不错，在这里我拿一个例子来示范一下我是怎么用的。&lt;/p&gt;
+
+&lt;h3 id=&quot;一次leak检测过程&quot;&gt;一次leak检测过程&lt;/h3&gt;
+
+&lt;h4 id=&quot;准备工作&quot;&gt;准备工作&lt;/h4&gt;
+
+&lt;p&gt;首先，我写了两个activity，一个MainActivity，一个MemoryLeakActivity，逻辑是：MainActivity中有个按钮，点击会调到MemoryLeakActivity，在这个activity中会故意发生内存泄漏，代码如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/code.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在开始之前，再熟悉一下这个&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/moniter.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;（原谅我拙劣的画笔）&lt;/p&gt;
+
+&lt;p&gt;这个Monitors可以观察当前选中app的运行状态，现在只需要关注我标了123的地方。&lt;/p&gt;
+
+&lt;p&gt;首先这个Memory就是当前app的内存使用状况：&lt;/p&gt;
+
+&lt;p&gt;1.产生一个当前java堆的.hprof文件，这个文件反映了当前时刻java堆中内存详情，记住这个玩意有大用！&lt;/p&gt;
+
+&lt;p&gt;2.手动进行一次gc&lt;/p&gt;
+
+&lt;p&gt;3.这一块很重要，首先他有两个部分，蓝色和灰色。蓝色部分是当前内存使用大小，灰色部分是这个app被限制的最大内存大小。当蓝色部分越来越大，最后和灰色部分一样时，说明我们内存使用很多了即将内存不足，此时会进行一次gc同时将回灰色部分即限制的大小提高。&lt;/p&gt;
+
+&lt;h4 id=&quot;肉眼观察&quot;&gt;肉眼观察&lt;/h4&gt;
+
+&lt;p&gt;好了，介绍完这个工具，我们开始动手实践。首先打开app，点击按钮跳到会发生泄漏的activity上，再按返回键，然后再次按下按钮……这样反复操作：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/activity1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/activity2.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;与此同时，观察monitors的memory窗口，会发现蓝色部分在每一次开启新activity时会增长一部分，这很正常。但是在返回时，明明activity被“退出”了，但是蓝色部分还是没有变化。反复几次之后，蓝色部分一直在增长。也就是说当前内存越用越多，可以推断已经发生内存泄漏啦~&lt;/p&gt;
+
+&lt;h4 id=&quot;自动分析&quot;&gt;自动分析&lt;/h4&gt;
+
+&lt;p&gt;接下来由android studio来分析一下。在反复几次上面的操作之后，返回MainActivity，然后点击dump java heap按钮，然后等一会儿，android studio在为我们dump此时的horof文件。在成功后，会自动打开：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/analyzer.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如图在这个界面中，我们看最右面有一个栏叫 Analyzer Tasks，打开它，会发现有两个选项。我们是来看activity的内存泄漏的，那就把那个查重复字符串的√去掉。然后点右边那个绿色小三角，会发现下面Analysis Results栏里面展示出了当前泄露的Activity引用：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/results.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;点击第一个item，最下方Reference Tree栏中便展示出了具体的引用：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/inner.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;一般来说，第一个就是我们发生泄漏的地方。在图中，this$0的意思是隐式的引用。也就是说，我们的activity是因为一个内部类而发生了内存泄漏。&lt;/p&gt;
+
+&lt;p&gt;再点击刚才results中第二个item，看一下下方的reference tree:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/leak/ref.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到显式的有一个leakCntextRef引用，这说明我们有一个名为leakCntextRef的引用持有了activity。回过头看看我们的代码，果然，验证的没错。&lt;/p&gt;
+
+&lt;h4 id=&quot;拓展&quot;&gt;拓展&lt;/h4&gt;
+
+&lt;p&gt;android studio的分析还算比较简单而且内容较少，我们可以把这个hprof导出，然后用mat来分析，具体看&lt;a href=&quot;https://mingjunli.gitbooks.io/mat/content/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;怎么解决泄漏&quot;&gt;怎么解决泄漏&lt;/h2&gt;
+
+&lt;p&gt;既然发生了泄漏，那就要解决它，避免问题出现。那么怎么解决呢？很简单，泄漏是因为持有了activity引用导致无法被销毁，那么只有两个选择：及时取消引用，或者让这个引用多待一会，但是该gc的时候就销毁。&lt;/p&gt;
+
+&lt;p&gt;根据这个思路：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;我们在代码中能不用static变量持有contxt就不用，非要用就用weak引用。&lt;/li&gt;
+  &lt;li&gt;对于内部类，尽量用静态内部类，这样就不会持有外部类引用。如果需要外部类引用做一些事，就手动赋给一个weak引用。&lt;/li&gt;
+  &lt;li&gt;对于匿名内部类，不要图简单方便，实在不行就乖乖的写成外部类。&lt;/li&gt;
+  &lt;li&gt;异步操作，尽量用可以方便管理的，比如rxJava，而不是用老古董AsyncTask了。非要用也最好加一个终止条件，在退出Activity时就该结束了。&lt;/li&gt;
+  &lt;li&gt;在用rx时，可以在subscribe()的时候获取到Subscripeion，在不用的时候手动unSubscribe()，或者直接bind()到Activity的生命周期上，比如使用RxActivity管理。&lt;/li&gt;
+  &lt;li&gt;在使用handler时，记得在activity的onDestroy()中加上remove()&lt;/li&gt;
+  &lt;li&gt;在获取到某些资源时，使用完记得释放&lt;/li&gt;
+  &lt;li&gt;在用到一些大对象比如Bitmap啊什么的，要记得回收&lt;/li&gt;
+  &lt;li&gt;最后，在使用各种第三方库或者系统服务的时候还要记得有注册或绑定就要有解除注册、解绑定。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 27 Jul 2017 20:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/27/memory-leak/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/27/memory-leak/</guid>
+        
+        <category>Android</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

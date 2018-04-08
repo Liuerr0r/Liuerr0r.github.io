@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="菜鸡 | allen|">
+    <meta name="keywords"  content=" Java, python">
+    <meta name="theme-color" content="#000000">
+    
+    <title>http要点（1） - 溜大虾 | Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2017/09/11/http/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">溜大虾 Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">about</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post/http-bg.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post/http-bg.jpg')
+    }
+
+    
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, 0.3);
+    }
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#http" title="http">http</a>
+                        
+                    </div>
+                    <h1>http要点（1）</h1>
+                    
+                    
+                    <h2 class="subheading">学习笔记</h2>
+                    
+                    <span class="meta">Posted by 溜大虾 on September 11, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="关于http">关于HTTP</h3>
+<p>HTTP（超文本传输协议）：</p>
+<ul>
+  <li>属于应用层协议。</li>
+  <li>基于c/s模式。</li>
+  <li>通过请求响应达成通行。</li>
+  <li>无连接，不保持状态，一次连接请求响应结束既断开。</li>
+  <li>职责是生成针对目标web服务器的http请求报文。</li>
+</ul>
+
+<h3 id="关于url">关于URL</h3>
+
+<p>URL（统一资源定位符）是URI（统一资源标识符）的子集。<br />
+URI格式：<br />
+协议方案名://user:password@host[:port]/带层次的文件路径?查询字符串#片段标识符</p>
+
+<h3 id="关于http报文">关于Http报文</h3>
+<p>用于http协议交互的信息称作HTTP报文。<br />
+从请求端发送到响应端（服务器端）的叫做请求报文。<br />
+从响应端发送到请求端的叫响应报文。<br />
+HTTP报文本身是由多行数据构成的字符串文本。
+HTTP报文可大致分为报文首部和报文主体两部分。两者由空行隔开。通常不一定要有报文主体。<br />
+<img src="https://raw.githubusercontent.com/Liuerr0r/Liuerr0r.github.io/master/img/datas/http_01.png" alt="报文结构" /><br />
+报文首部：服务器端或客户端处理的请求或响应的内容及属性。<br />
+报文主体：应被发送的数据。</p>
+<h4 id="请求报文的结构">请求报文的结构</h4>
+<ul>
+  <li>请求行：用于请求的方法，请求URI和Http的版本。格式：请求方法 请求URI Http版本号</li>
+  <li>请求首部字段</li>
+  <li>通用首部字段</li>
+  <li>实体首部字段</li>
+  <li>其他</li>
+</ul>
+
+<p>请求方法：</p>
+
+<ul>
+  <li>GET:获取资源。该方法用于请求访问已被URI识别的资源。指定的资源被服务器解析后返回响应的内容。</li>
+  <li>POST：在请求URI所标识的资源后附加新的数据。常用于提交表单。</li>
+  <li>HEAD：请求获取由请求URI所标识的资源的响应消息报头。</li>
+  <li>PUT：向服务器存储资源，并保存到请求URI指定的位置。</li>
+  <li>DELETE：删除请求URI指定的资源。</li>
+  <li>TRACE：请求服务器回送收到的请求信息，主要用于测试和诊断（不常用）。</li>
+  <li>CONNECT：该方法要求在代理服务器通信时建立隧道，实现用隧道协议进行TCP通信。主要使用SLL和TLS协议把通信信息加密后传输。</li>
+  <li>OPTIONS：查询请求URI指定资源支持的方法。</li>
+</ul>
+
+<h4 id="响应报文的结构">响应报文的结构</h4>
+<ul>
+  <li>状态行：包含响应结果的状态码，原因短语和HTTP版本。</li>
+  <li>响应首部字段</li>
+  <li>通用首部字段</li>
+  <li>实体首部字段</li>
+  <li>其他</li>
+</ul>
+
+<p>状态码：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">类别</th>
+      <th style="text-align: center">原因短语</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1xx</td>
+      <td style="text-align: center">信息性状态码</td>
+      <td style="text-align: center">接收的请求正在处理</td>
+    </tr>
+    <tr>
+      <td>2xx</td>
+      <td style="text-align: center">成功状态码</td>
+      <td style="text-align: center">请求正常处理完毕</td>
+    </tr>
+    <tr>
+      <td>3xx</td>
+      <td style="text-align: center">重定向状态码</td>
+      <td style="text-align: center">需要进行附加操作以完成请求</td>
+    </tr>
+    <tr>
+      <td>4xx</td>
+      <td style="text-align: center">客户端错误状态码</td>
+      <td style="text-align: center">服务器无法处理请求</td>
+    </tr>
+    <tr>
+      <td>5xx</td>
+      <td style="text-align: center">服务器错误状态码</td>
+      <td style="text-align: center">服务器处理请求出错</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>常见状态码：</p>
+<ul>
+  <li>200 ok：服务器正常处理请求。</li>
+  <li>204 no content：服务器正常处理请求没有资源返回。</li>
+  <li>206 partial content：表示客户端进行了范围请求，服务器成功执行了这部分的get请求。</li>
+  <li>301 Moved permanently：表示资源已经永久性重定向到了新的URI。</li>
+  <li>302 Found ：临时新重定向，表示请求的资源已经被分配到了其他URI，希望用户本次能使用心得URI访问（302存在网址劫持的问题。比如我要做一个新的网址
+但是我不想写内容，于是我用302做一个重定向，当别人访问我的网址的时候会跳转到别人的网址。但是由于搜索引擎算法的原因和我的网址比别人的网址更加简洁友好
+导致搜索引擎不会去抓取别人的网址，而是继续显示我的网址，但网址的内容却是别人网址的。从而把别人的劳动成果窃取。）</li>
+  <li>303 See other：该状态码明确要求客户端应该采用get方法获取资源。</li>
+  <li>307 Temporary Redirect:对于POST请求，表示请求还没有被处理，客户端应该向Location里的URI重新发起POST请求。</li>
+  <li>304 Not Modified：该状态码表示客户端发送附带请求时，服务器端允许请求访问资源。但因为发生请求为满足条件的情况后，直接返回304 状态码。</li>
+  <li>400 Bad Request：该状态码表示请求包含语法错误。</li>
+  <li>401 Unauthorized：请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用。</li>
+  <li>403 Forbidden：服务器收到请求，但是拒绝提供服务。</li>
+  <li>404 Not Found：请求资源不存在，eg：输入了错误的URL。</li>
+  <li>500 Internal Server Error：服务器发生不可预期的错误。</li>
+  <li>503 Server Unavailable：服务器当前不能处理客户端的请求，一段时间后可能恢复正常。</li>
+</ul>
+
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/09/06/java-jvm-2/" data-toggle="tooltip" data-placement="top" title="Java虚拟机的基本结构">
+                        Previous<br>
+                        <span>Java虚拟机的基本结构</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/09/12/http/" data-toggle="tooltip" data-placement="top" title="http要点（2）">
+                        Next<br>
+                        <span>http要点（2）</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href=""></a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "Liuerr0r";
+    var disqus_identifier = "/2017/09/11/http";
+    var disqus_url = "http://localhost:4000/2017/09/11/http/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xu-hua-85-3">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Liuerr0r">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 溜大虾 Blog 2018
+                    <br>
+                    <!--Theme by <a href="http://huangxuan.me">Hux</a> |-->
+                    <!--<iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>-->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+<!-- Image to hack wechat -->
+<!--<img src="/img/icon_wechat.png" width="0" height="0" />-->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="菜鸡 | allen|">
+    <meta name="keywords"  content=" Java, python">
+    <meta name="theme-color" content="#000000">
+    
+    <title>溜大虾 | Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/page2/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">溜大虾 Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">about</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>溜大虾 Blog</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">爱编程，爱生活</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    		<div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+    			
+<div class="post-preview">
+    <a href="/2017/07/25/review-os/">
+        <h2 class="post-title">
+            操作系统
+        </h2>
+        
+        <h3 class="post-subtitle">
+            面试笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            操作系统
+
+操作系统算是基础了，重点就这么几个
+
+进程
+
+
+  什是进程？一个具有一定独立功能的程序在一个数据集合上的一次动态执行过程。
+  进程是资源申请和系统调度的基本单位
+  进程描述了程序的动态执行过程。
+  对应处理机、存储器和外设等资源的分配和回收
+  反映系统中程序执行的并发性、随机性和资源共享
+  多进程提高了对硬件资源的利用率，但有带来了额外的空间和时间开销，增加了OS的复...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 25, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/25/review-net/">
+        <h2 class="post-title">
+            计算机网络
+        </h2>
+        
+        <h3 class="post-subtitle">
+            面试笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            计算机网络
+
+计算机网络也有部分考点
+
+OSI模型及每一层作用
+
+OSI模型，按自顶向下可分为五层或七层，一下按五层来讲，分别是：
+
+
+  应用层：
+  传输层：端到端可靠报文传递和错误恢复
+  网络层：数据包从源到宿的传递和网际互联
+  链路层：将比特组装成帧 点到点传递
+  物理层：通过物理媒介传输比特
+
+
+IP地址作用及分类
+
+IP地址是ip协议提供的一种统一的地址格式，为互联网上的每...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 25, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/java-jvm-5/">
+        <h2 class="post-title">
+            《深入理解JVM》读书笔记（五）
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习总结
+        </h3>
+        
+        <div class="post-content-preview">
+            第五部分 高效并发
+
+这一部分主要讲了Java内存模型与线程相关
+
+Java内存模型
+
+何为内存模型？首先我们知道，Java是跨平台的，怎么实现跨平台呢？是因为虚拟。虚拟机怎么就跨平台了呢？是因为Java虚拟机定义了一种内存模型，用来屏蔽掉各种硬件和操作系统的内存访问差异，这样就让Java程序在各个平台下都能达到一致的内存访问效果。
+
+1.主存与工作内存
+
+1.Java内存模型的主要目标是定...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/java-proxy/">
+        <h2 class="post-title">
+            动态代理&静态代理
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习总结
+        </h3>
+        
+        <div class="post-content-preview">
+            代理，就是对类做一个包装，通过使用这个包装好的类来使用本来要用的类，这样可以额外做一些操作。
+代理分为静态代理和动态代理。
+
+静态代理
+
+ 	实现起来很简单，一个接口用来提供要实现的方法，一个被代理类和一个代理类都要实现这个接口。同时，被代理类实现接口的方法后要做自己要做的事，而代理类则要在内部创建一个被代理类的实例，然后在实现的接口的方法中调用被代理类的那个方法，同时做一些自己的修饰。
+
+...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/java-jvm-4/">
+        <h2 class="post-title">
+            《深入理解JVM》读书笔记（四）
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习总结
+        </h3>
+        
+        <div class="post-content-preview">
+            第三部分 虚拟机执行子系统
+
+虚拟机类加载机制
+
+1.类加载的时机
+
+1.类从被加载到虚拟机内存开始，到卸载出内存为止，他的整个生命周期包括：加载-验证-准备-解析-初始化-使用-卸载 七个阶段，其中验证、准备、解析三个部分统称为链接。
+2.加载的时机：
+
+  使用new关键字实例化对象的时候、读取或设置一个类的静态字段的时候、以及调用一个类的静态方法的时候。
+  使用reflect包中的方...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/java-jvm-3/">
+        <h2 class="post-title">
+            《深入理解JVM》读书笔记（三）
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习总结
+        </h3>
+        
+        <div class="post-content-preview">
+            第三章 垃圾收集器与内存分配策略
+
+对象已死吗？
+
+1.引用计数法
+
+1.主流的Java虚拟机里面没有选用引用计数算法来管理内存，其中最主要的原因是他很难解决对象之间互相引用的问题。
+
+2.可达性分析算法
+
+1.主流的商用程序语言的主流实现中都是用可达性分析来判断对象是否存活的2.从一个起始对象GC Roots开始向下搜索，搜索所走过的路径称为引用链，档一个对象到GC Roots没有任何引用...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/java-jvm-2/">
+        <h2 class="post-title">
+            《深入理解JVM》读书笔记（二）
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习总结
+        </h3>
+        
+        <div class="post-content-preview">
+            第二章 Java内存区域与内存溢出异常
+
+运行时数据区域
+
+Java虚拟机会把他所管理的内存划分为若干个不同的数据区域：
+
+
+  
+    
+      线程共享
+      线程隔离
+    
+  
+  
+    
+      方法区
+      本地方法栈
+    
+    
+      堆
+      虚拟机栈
+    
+    
+       
+      程序计数器
+    
+  ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/android-inflater/">
+        <h2 class="post-title">
+            Layout.inflat()中的那些坑
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习总结
+        </h3>
+        
+        <div class="post-content-preview">
+            LayoutInflater.inflate()这个方法，大家一定很熟悉——在给fragment添加布局文件，或者在RecyclerView的Adapter中为item添加布局时，都会用到。inflate()这个方法需要最多三个参数：resource，root，以及attachToRoot。参考源码，就知道了这里的resource是你具体要添加的那个布局文件，root是布局的根参数，那么at...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/android-handler/">
+        <h2 class="post-title">
+            Android消息机制
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习总结
+        </h3>
+        
+        <div class="post-content-preview">
+            1.消息机制
+
+Android消息机制，其实也就是Handler机制，主要用于UI线程和子线程之间交互。众所周知，一般情况下，出于安全的考虑，所有与UI控件的操作都要放在主线程及UI线程，而一些耗时操作应当放在子线程中。当在子线程中完成耗时操作并要对UI控件进行操作时，就要用Handler来控制了。在这一套消息机制中，首先要明确这样几个概念：
+
+
+  Handler：消息的控制器
+  Mes...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2017/07/22/android-view-bus/">
+        <h2 class="post-title">
+            View事件分发机制
+        </h2>
+        
+        <h3 class="post-subtitle">
+            学习笔记
+        </h3>
+        
+        <div class="post-content-preview">
+            事件分发机制学习笔记
+通过问题来学习一个东西是很好的方法。学习Android中View的事件体系，我也通过给自己提问题，在解决问题的同时也就知道了其中原理。
+
+0
+首先来几个问题起步：
+
+  什么是事件？
+  什么是事件分发机制？
+
+
+在我们通过屏幕与手机交互的时候，每一次点击、长按、移动等都是一个个事件。按照面向对象的思想，这些一个个事件都被封装成了MotionEvent。
+分发机制就是某...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by 溜大虾 on July 22, 2017
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    <li class="previous">
+        <a href="/">&larr; Newer Posts</a>
+    </li>
+    
+    
+    <li class="next">
+        <a href="/page3">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
+
+
+    		</div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+                        
+                            <img src="/img/avatar.jpg" />
+                        
+                        
+                            <p>爱编程  <br>  &nbsp; &nbsp; &nbsp; &nbsp; 爱生活</p>
+                        
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.zhihu.com/people/xu-hua-85-3">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://github.com/Liuerr0r">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                        </ul>
+                    </div>
+                </section>
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href=""></a></li>
+                    
+                </ul>
+                
+    		</div>
+        
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xu-hua-85-3">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Liuerr0r">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 溜大虾 Blog 2018
+                    <br>
+                    <!--Theme by <a href="http://huangxuan.me">Hux</a> |-->
+                    <!--<iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>-->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+
+
+
+<!-- Image to hack wechat -->
+<!--<img src="/img/icon_wechat.png" width="0" height="0" />-->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

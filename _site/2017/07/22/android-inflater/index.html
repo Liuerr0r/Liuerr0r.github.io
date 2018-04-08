@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="菜鸡 | allen|">
+    <meta name="keywords"  content=" Java, python">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Layout.inflat()中的那些坑 - 溜大虾 | Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2017/07/22/android-inflater/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">溜大虾 Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">about</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/bg-inflater.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/bg-inflater.jpg')
+    }
+
+    
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, 0.3);
+    }
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Android" title="Android">Android</a>
+                        
+                    </div>
+                    <h1>Layout.inflat()中的那些坑</h1>
+                    
+                    
+                    <h2 class="subheading">学习总结</h2>
+                    
+                    <span class="meta">Posted by 溜大虾 on July 22, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<p>LayoutInflater.inflate()这个方法，大家一定很熟悉——在给fragment添加布局文件，或者在RecyclerView的Adapter中为item添加布局时，都会用到。inflate()这个方法需要最多三个参数：resource，root，以及attachToRoot。参考源码，就知道了这里的resource是你具体要添加的那个布局文件，root是布局的根参数，那么attachToRoot是什么意思呢？什么时候为true，什么时候为false？</p>
+
+<h2 id="三个参数的关系">三个参数的关系</h2>
+
+<p>参见官方文档，对这三个参数的介绍是：被填充的层是否应该附在root参数内部？如果是false，root参数只适用于为xml根元素View创建正确的LayoutParams的子类。</p>
+
+<p>什么意思呢？就是说，如果attachToRoot为true，那么resource指定的布局文件就会依附于root指定的ViewGroup，然后这个方法就会返回root，否则，只会将resource指定的布局文件填充并将其返回，具体可以参考源码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean attachToRoot) {
+
+        synchronized (mConstructorArgs) {
+
+            Trace.traceBegin(Trace.TRACE_TAG_VIEW, "inflate");
+
+            final Context inflaterContext = mContext;
+
+            final AttributeSet attrs = Xml.asAttributeSet(parser);
+
+            Context lastContext = (Context) mConstructorArgs[0];
+
+            mConstructorArgs[0] = inflaterContext;
+
+            View result = root;
+
+            try {
+
+                // Look for the root node.
+
+                int type;
+
+                while ((type = parser.next()) != XmlPullParser.START_TAG &amp;&amp;
+
+                        type != XmlPullParser.END_DOCUMENT) {
+
+                    // Empty
+                if (type != XmlPullParser.START_TAG) {
+
+                    throw new InflateException(parser.getPositionDescription()
+
+                            + ": No start tag found!");
+
+                }
+
+                final String name = parser.getName();
+
+      
+
+                if (DEBUG) {
+
+                    System.out.println("**************************");
+
+                    System.out.println("Creating root view: "
+
+                            + name);
+
+                    System.out.println("**************************");
+
+                }
+
+
+
+                if (TAG_MERGE.equals(name)) {
+
+                    if (root == null || !attachToRoot) {
+
+                        throw new InflateException("&lt;merge /&gt; can be used only with a valid "
+
+                                + "ViewGroup root and attachToRoot=true");
+
+                    }
+
+
+
+                    rInflate(parser, root, inflaterContext, attrs, false);
+
+                } else {
+
+                    // Temp is the root view that was found in the xml
+
+                    final View temp = createViewFromTag(root, name, inflaterContext, attrs);
+
+
+
+                    ViewGroup.LayoutParams params = null;
+
+
+
+                    if (root != null) {
+
+                        if (DEBUG) {
+
+                            System.out.println("Creating params from root: " +
+
+                                    root);
+
+                        }
+
+                        // Create layout params that match root, if supplied
+
+                        params = root.generateLayoutParams(attrs);
+
+                        if (!attachToRoot) {
+
+                            // Set the layout params for temp if we are not
+
+                            // attaching. (If we are, we use addView, below)
+
+                            temp.setLayoutParams(params);
+
+                        }
+
+                    }
+
+
+
+                    if (DEBUG) {
+
+                        System.out.println("-----&gt; start inflating children");
+
+                    }
+
+
+
+                    // Inflate all children under temp against its context.
+
+                    rInflateChildren(parser, temp, attrs, true);
+
+
+
+                    if (DEBUG) {
+
+                        System.out.println("-----&gt; done inflating children");
+
+                    }
+
+
+
+                    // We are supposed to attach all the views we found (int temp)
+
+                    // to root. Do that now.
+
+                    if (root != null &amp;&amp; attachToRoot) {
+
+                        root.addView(temp, params);
+
+                    }
+
+
+
+                    // Decide whether to return the root that was passed in or the
+
+                    // top view found in xml.
+
+                    if (root == null || !attachToRoot) {
+
+                        result = temp;
+
+                    }
+
+                }
+
+
+
+            } catch (XmlPullParserException e) {
+
+                InflateException ex = new InflateException(e.getMessage());
+
+                ex.initCause(e);
+
+                throw ex;
+
+            } catch (Exception e) {
+
+                InflateException ex = new InflateException(
+
+                        parser.getPositionDescription()
+
+                                + ": " + e.getMessage());
+
+                ex.initCause(e);
+
+                throw ex;
+
+            } finally {
+
+                // Don't retain static reference on context.
+
+                mConstructorArgs[0] = lastContext;
+
+                mConstructorArgs[1] = null;
+
+            }
+
+
+
+            Trace.traceEnd(Trace.TRACE_TAG_VIEW);
+
+
+
+            return result;
+
+        }
+
+    }
+
+
+
+</code></pre></div></div>
+
+<p>总结一下，就是：</p>
+
+<ul>
+  <li>若attachToRoot为true且root不为null，则调用root.addView()方法</li>
+  <li>若root为null，或者attachToRoot为false，则直接将temp赋于result(temp是通过root构造的，result就是root)</li>
+</ul>
+
+<h2 id="何时为true何时为false">何时为true，何时为false?</h2>
+
+<p>就拿我们的Adapter来说吧，在创建item布局时，有下列几种情况：</p>
+
+<ul>
+  <li>inflate(<a href="http://r.layout.xxx/">R.layout.xxx</a>,null);</li>
+  <li>inflate(<a href="http://r.layout.xxx/">R.layout.xxx</a>,parent,false);</li>
+  <li>inflate(<a href="http://r.layout.xxx/">R.layout.xxx</a>,parent,true);</li>
+</ul>
+
+<p>那么就讲一下这三种情况把。</p>
+
+<p>首先，inflate(<a href="http://r.layout.xxx/">R.layout.xxx</a>,null) 。这是最简单的写法，这样生成的布局就是根据R.layout.xxx返回的View。要知道，这个布局文件中的宽高属性都是相当于父布局而言的。由于没有指定parent，所以他的宽高属性就失效了，因此不管你怎么改宽高属性，都无法按你想象的那样显示。</p>
+
+<p>然后，inflate(<a href="http://r.layout.xxx/">R.layout.xxx</a>,parent,false)。相较于前者，这里加了父布局，不管后面是true还是false，由于有了parent，布局文件的宽高属性是有依靠了，这时候显示的宽高样式就是布局文件中的那样了。</p>
+
+<p>最后，inflate(<a href="http://r.layout.xxx/">R.layout.xxx</a>,parent,true)。这样……等等，报错了？？？哦，不要惊奇，分析一下原因：首先，有了parent，所以可以正确处理布局文件的宽高属性。然后，既然attachToRoot为true，那么根据上面的源码就会知道，这里会调用root的addView方法。而如果root是listView等，由于他们是继承自AdapterView的，看看AdapterView的addView方法：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@Override
+
+    public void addView(View child) {
+
+        throw new UnsupportedOperationException("addView(View) is not supported in AdapterView");
+
+    }
+
+
+</code></pre></div></div>
+
+<p>不资磁啊，那好吧，如果换成RecyclerView呢？还是报错了，看看源码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (child.getParent() != null) {
+
+            throw new IllegalStateException("The specified child already has a parent. " +
+
+                    "You must call removeView() on the child's parent first.");
+
+        }
+
+
+</code></pre></div></div>
+
+<p>现在知道了吧，adpater里面不要用true。那么什么时候用true呢？答案是fragment。在为fragment创建布局时，如果为true，那么这个布局文件就会被添加到父activity中盛放fragment的布局中。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/07/22/android-handler/" data-toggle="tooltip" data-placement="top" title="Android消息机制">
+                        Previous<br>
+                        <span>Android消息机制</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/07/22/java-jvm-2/" data-toggle="tooltip" data-placement="top" title="《深入理解JVM》读书笔记（二）">
+                        Next<br>
+                        <span>《深入理解JVM》读书笔记（二）</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href=""></a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "Liuerr0r";
+    var disqus_identifier = "/2017/07/22/android-inflater";
+    var disqus_url = "http://localhost:4000/2017/07/22/android-inflater/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xu-hua-85-3">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/Liuerr0r">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 溜大虾 Blog 2018
+                    <br>
+                    <!--Theme by <a href="http://huangxuan.me">Hux</a> |-->
+                    <!--<iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huxpro&repo=huxpro.github.io&type=star&count=true" >
+                    </iframe>-->
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+<!-- Image to hack wechat -->
+<!--<img src="/img/icon_wechat.png" width="0" height="0" />-->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
